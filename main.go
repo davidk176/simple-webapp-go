@@ -1,12 +1,16 @@
 package main
 
 import (
+	"html/template"
+	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("<h1>Hello World!</h1>"))
+type Greeting struct {
+	Name string
+	Time string
 }
 
 func main() {
@@ -17,6 +21,20 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", indexHandler)
+	mux.HandleFunc("/", greetingHandler)
 	http.ListenAndServe(":"+port, mux)
+}
+
+func greetingHandler(w http.ResponseWriter, r *http.Request) {
+	greeting := Greeting{
+		Name: "any",
+		Time: time.Now().Format(time.Stamp),
+	}
+
+	t, err := template.ParseFiles("templates/start.html")
+
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	err = t.Execute(w, greeting)
 }
