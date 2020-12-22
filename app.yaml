@@ -1,1 +1,4 @@
 runtime: go114
+
+env_variables:
+  PORT: 8080

@@ -20,6 +20,7 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
+	log.Print("Using Port " + port)
 
 	mux := http.NewServeMux()
 
