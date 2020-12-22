@@ -1,5 +1,6 @@
 steps:
-  - name: 'golang'
+  - id: 'pull dependencies'
+    name: 'golang'
     args: [ 'go', 'build', '.' ]
     env: [ 'GO111MODULE=on' ]
 

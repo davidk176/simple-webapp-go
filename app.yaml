@@ -2,3 +2,7 @@ runtime: go114
 
 env_variables:
   PORT: 8080
+  INSTANCE_CONNECTION_NAME: test1-cc:europe-west1:db-webapp
+  DB_USER: test
+  DB_PASS: test
+  DB_NAME: webapp
