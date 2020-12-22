@@ -36,7 +36,7 @@ func greetingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.ParseFiles("templates/start.html")
-	writeToDatabase("Buch", 2)
+	//writeToDatabase("Buch", 2)
 
 	if err != nil {
 		log.Print("Error parsing template: ", err)
