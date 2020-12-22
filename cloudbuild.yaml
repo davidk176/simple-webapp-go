@@ -7,6 +7,4 @@ steps:
   - id: 'deploy app'
     name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
-    env:
-      - 'PORT=8080'
 timeout: "1600s"
