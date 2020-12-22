@@ -1,14 +1,17 @@
 steps:
   # If you already have a go.mod file, you can skip this step.
-  - name: 'golang'
+   - id: 'init go mod'
+    name: 'golang'
     args: [ 'go', 'mod', 'init', 'github.com/go-sql-driver/mysql' ]
 
   # Build the module.
-  - name: 'golang'
+  - id: 'build go mod'
+    name: 'golang'
     env: [ 'GO111MODULE=on' ]
     args: [ 'go', 'build', './...' ]
 
-  - name: "gcr.io/cloud-builders/gcloud"
+  - id: 'deploy app'
+    name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
     env:
       - 'PORT=8080'
