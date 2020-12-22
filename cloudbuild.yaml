@@ -1,4 +1,7 @@
 steps:
+  steps:
+  - name: "bash"
+    args: [go get -u github.com/go-sql-driver/mysql]
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
     env:
