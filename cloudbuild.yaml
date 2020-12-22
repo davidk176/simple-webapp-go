@@ -1,6 +1,6 @@
 steps:
   # If you already have a go.mod file, you can skip this step.
-   - id: 'init go mod'
+  - id: 'init go mod'
     name: 'golang'
     args: [ 'go', 'mod', 'init', 'github.com/go-sql-driver/mysql' ]
 
