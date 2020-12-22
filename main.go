@@ -21,7 +21,7 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
-	log.Print("Using Port " + port)
+	log.Print("Using  Port " + port)
 
 	mux := http.NewServeMux()
 
@@ -70,10 +70,10 @@ func writeToDatabase(name string, anzahl int) {
 func initSocketConnectionPool() (*sql.DB, error) {
 	// [START cloud_sql_mysql_databasesql_create_socket]
 	var (
-		dbUser                 = os.Getenv("DB_USER")                  // e.g. 'my-db-user'
-		dbPwd                  = os.Getenv("DB_PASS")                  // e.g. 'my-db-password'
-		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME") // e.g. 'project:region:instance'
-		dbName                 = os.Getenv("DB_NAME")                  // e.g. 'my-database'
+		dbUser                 = os.Getenv("DB_USER")
+		dbPwd                  = os.Getenv("DB_PASS")
+		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME")
+		dbName                 = os.Getenv("DB_NAME")
 	)
 
 	socketDir, isSet := os.LookupEnv("DB_SOCKET_DIR")
