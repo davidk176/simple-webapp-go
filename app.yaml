@@ -1,4 +1,5 @@
 runtime: go114
+service: simple-webapp-nosql
 
 env_variables:
   PORT: 8080
