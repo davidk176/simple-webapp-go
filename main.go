@@ -12,7 +12,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", shoppingHandler)
-	mux.HandleFunc("/add", articelHandler)
+	mux.HandleFunc("/add", artikelHandler)
 	_ = http.ListenAndServe(":"+port, mux)
 }
 

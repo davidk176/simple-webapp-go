@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func writeToDatabase(artikel Artikel) {
+func addArtikelToDatabase(artikel Artikel) {
 
 	log.Print("Write to DB: " + artikel.Name)
 	//db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/webapp")
@@ -27,6 +27,24 @@ func writeToDatabase(artikel Artikel) {
 
 	defer db.Close()
 
+}
+
+func getArtikelFromDatabase() (artikel []Artikel) {
+	log.Print("Get Artikel from DB")
+	db, err := initSocketConnectionPool()
+	if err != nil {
+		log.Print(err.Error())
+	}
+
+	rows, _ := db.Query("SELECT * FROM Artikel")
+
+	for rows.Next() {
+		a := Artikel{}
+		rows.Scan(&a.Name, &a.Anz, nil)
+		artikel = append(artikel, a)
+	}
+
+	return artikel
 }
 
 func initSocketConnectionPool() (*sql.DB, error) {

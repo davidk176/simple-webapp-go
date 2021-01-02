@@ -10,6 +10,7 @@ import (
 type PageVar struct {
 	Title    string
 	Response string
+	Artikel  []Artikel
 }
 
 type Artikel struct {
@@ -31,8 +32,8 @@ func shoppingHandler(w http.ResponseWriter, _ *http.Request) {
 	err = t.Execute(w, Var)
 }
 
-func articelHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("Start articelHandler")
+func artikelHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Start artikelHandler")
 	_ = r.ParseForm()
 
 	log.Print(r)
@@ -44,18 +45,19 @@ func articelHandler(w http.ResponseWriter, r *http.Request) {
 		Response: name,
 	}
 
+	Artikel := Artikel{
+		Name: name,
+		Anz:  menge,
+	}
+	log.Print(Artikel)
+	addArtikelToDatabase(Artikel)
+
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
+	Var.Artikel = getArtikelFromDatabase()
 	err = t.Execute(w, Var)
-
-	artikel := Artikel{
-		Name: name,
-		Anz:  menge,
-	}
-	log.Print(artikel)
-	writeToDatabase(artikel)
 
 }

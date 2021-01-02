@@ -21,9 +21,25 @@
     <button type="submit">absenden</button>
 </form>
 
-{{with $2:=.Response}}
-<p>{{$2}} zu Artikeln hinzugefügt</p>
+{{with $1:=.Response}}
+<p>{{$1}} zu Artikeln hinzugefügt</p>
 {{end}}
+
+{{with $2:=.Artikel}}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Menge</th>
+    </tr>
+    {{range $2}}
+    <tr>
+        <td>{{.Name}}</td>
+        <td>{{.Anz}}</td>
+    </tr>
+    {{end}}
+</table>
+{{end}}
+
 </body>
 </html>
 
