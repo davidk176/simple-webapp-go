@@ -8,12 +8,23 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
 type Greeting struct {
 	Name string
 	Time string
+}
+
+type PageVar struct {
+	Title    string
+	Response string
+}
+
+type Artikel struct {
+	Name string
+	Anz  int64
 }
 
 func main() {
@@ -25,7 +36,9 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", greetingHandler)
+	//mux.HandleFunc("/", greetingHandler)
+	mux.HandleFunc("/", shoppingHandler)
+	mux.HandleFunc("/add", articelHandler)
 	http.ListenAndServe(":"+port, mux)
 }
 
@@ -37,7 +50,7 @@ func greetingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.ParseFiles("templates/start.html")
-	writeToDatabase("Buch", 2)
+	//writeToDatabase("Buch", 2)
 
 	if err != nil {
 		log.Print("Error parsing template: ", err)
@@ -45,16 +58,59 @@ func greetingHandler(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, greeting)
 }
 
-func writeToDatabase(name string, anzahl int) {
+func shoppingHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Start shoppingHandler")
 
-	log.Print("Write to DB")
+	Var := PageVar{
+		Title: "MyShop",
+	}
+	t, err := template.ParseFiles("templates/shop1.html")
+
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	err = t.Execute(w, Var)
+}
+
+func articelHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Start articelHandler")
+	r.ParseForm()
+
+	log.Print(r)
+	name := r.Form.Get("name")
+	menge, _ := strconv.ParseInt(r.Form.Get("menge"), 10, 64)
+
+	Var := PageVar{
+		Title:    "MyShop",
+		Response: name,
+	}
+
+	t, err := template.ParseFiles("templates/shop1.html")
+
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	err = t.Execute(w, Var)
+
+	artikel := Artikel{
+		Name: name,
+		Anz:  menge,
+	}
+	log.Print(artikel)
+	writeToDatabase(artikel)
+
+}
+
+func writeToDatabase(artikel Artikel) {
+
+	log.Print("Write to DB: " + artikel.Name)
 	//db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/webapp")
 	db, err := initSocketConnectionPool()
 	if err != nil {
 		log.Print(err.Error())
 	}
 
-	insert, err := db.Query("INSERT INTO Artikel (Name, Anzahl) VALUES ('test', 2)")
+	insert, err := db.Query("INSERT INTO Artikel (Name, Anzahl) VALUES (?, ?)", artikel.Name, artikel.Anz)
 
 	if insert != nil {
 		log.Print(insert.Columns())

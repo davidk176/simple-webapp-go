@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <title>{{.Title}}</title>
+</head>
+
+
+<body>
+<form action="/add" id="shoppingcart" method="post">
+
+    <label for="name">Artikel</label>
+    <input type="text" name="name" id="name" maxlength="30">
+
+    <label for="menge">Menge</label>
+    <input type="text" name="menge" id="menge" maxlength="40">
+
+    <button type="reset">zurücksetzen</button>
+    <button type="submit">absenden</button>
+</form>
+
+{{with $2:=.Response}}
+<p>{{$2}} zu Artikeln hinzugefügt</p>
+{{end}}
+</body>
+</html>
+
