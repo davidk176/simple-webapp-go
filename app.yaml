@@ -1,4 +1,5 @@
 runtime: go114
+service: simple-webapp-sql
 
 env_variables:
   PORT: 8080
