@@ -15,6 +15,7 @@ func addArtikelToDatabase(artikel Artikel) {
 	log.Print("Write to DB: " + artikel.Name)
 	//db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/webapp")
 	db, err := initSocketConnectionPool()
+	log.Print("initialized DB socket ")
 	if err != nil {
 		log.Print(err.Error())
 	}
@@ -58,6 +59,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME")
 		dbName                 = os.Getenv("DB_NAME")
 	)
+	log.Print(dbPwd)
 
 	socketDir, isSet := os.LookupEnv("DB_SOCKET_DIR")
 	if !isSet {
