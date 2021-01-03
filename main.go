@@ -11,15 +11,20 @@ func main() {
 	port := getPort()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", shoppingHandler)
+	mux.HandleFunc("/", homeHandler)
+	mux.HandleFunc("/login", loginHandler)
+	mux.HandleFunc("/callback", handleGoogleCallback)
+
+	mux.HandleFunc("/shop", shoppingHandler)
 	mux.HandleFunc("/add", artikelHandler)
+
 	_ = http.ListenAndServe(":"+port, mux)
 }
 
 func getPort() (port string) {
 	port = os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "8080"
 	}
 	log.Print("Using  Port " + port)
 	return port
