@@ -39,7 +39,7 @@ func init() {
 }
 
 func getRedirectUrl() (url string) {
-	url = os.Getenv("OAUTH_REDIRECT-URL")
+	url = os.Getenv("OAUTH_REDIRECT_URL")
 	if url == "" {
 		return "http://localhost:8080/callback"
 	}
