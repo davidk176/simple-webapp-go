@@ -19,6 +19,7 @@ func main() {
 	mux.HandleFunc("/add", artikelHandler)
 
 	_ = http.ListenAndServe(":"+port, mux)
+
 }
 
 func getPort() (port string) {
