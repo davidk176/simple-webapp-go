@@ -60,6 +60,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 		dbName                 = os.Getenv("DB_NAME")
 	)
 	log.Print(dbPwd)
+	log.Print(err)
 
 	socketDir, isSet := os.LookupEnv("DB_SOCKET_DIR")
 	if !isSet {
@@ -80,7 +81,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 }
 
 // accessSecretVersion accesses the payload for the given secret version if one
-// exists. The version can be a version number as a string (e.g. "5") or an projects/345398956581/secrets/pw-sqldb/versions/1
+// exists. The version can be a version number as a string (e.g. "5") or an projects/345398956581/secrets/pw-sqldb/versions/1 projects/345398956581/secrets/pw-sqldb
 // alias (e.g. "latest").
 func accessSecretVersion(name string) (*string, error) {
 	// name := "projects/my-project/secrets/my-secret/versions/5"
