@@ -55,7 +55,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 	// [START cloud_sql_mysql_databasesql_create_socket]
 	var (
 		dbUser                 = os.Getenv("DB_USER")
-		dbPwd, err             = accessSecretVersion("projects/test1-cc/secrets/pw-sqldb/versions/latest")
+		dbPwd, err             = accessSecretVersion("projects/345398956581/secrets/pw-sqldb/versions/1")
 		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME")
 		dbName                 = os.Getenv("DB_NAME")
 	)
@@ -80,7 +80,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 }
 
 // accessSecretVersion accesses the payload for the given secret version if one
-// exists. The version can be a version number as a string (e.g. "5") or an
+// exists. The version can be a version number as a string (e.g. "5") or an projects/345398956581/secrets/pw-sqldb/versions/1
 // alias (e.g. "latest").
 func accessSecretVersion(name string) (*string, error) {
 	// name := "projects/my-project/secrets/my-secret/versions/5"
