@@ -60,7 +60,9 @@ func initSocketConnectionPool() (*sql.DB, error) {
 		dbName                 = os.Getenv("DB_NAME")
 	)
 	log.Print(dbPwd)
-	log.Print(err)
+	if err != nil {
+		log.Print(err)
+	}
 
 	socketDir, isSet := os.LookupEnv("DB_SOCKET_DIR")
 	if !isSet {
