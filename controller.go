@@ -107,5 +107,20 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
+
+	state := r.FormValue("state")
+	log.Print(state)
+
+	code := r.FormValue("code")
+
+	token, err := googleOauthConfig.Exchange(oauth2.NoContext, code)
+
+	if err != nil {
+		return
+	}
+	log.Print(token.AccessToken)
+	log.Print(token.Expiry.String())
+	log.Print(token.RefreshToken)
+
 	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
 }
