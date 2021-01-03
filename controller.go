@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"golang.org/x/oauth2"
@@ -29,12 +30,20 @@ var (
 
 func init() {
 	googleOauthConfig = &oauth2.Config{
-		RedirectURL:  "http://localhost:8080/callback",
+		RedirectURL:  getRedirectUrl(),
 		ClientID:     "345398956581-rq77v9k0l7uo0v7tvtgur21ld6ht3i8b.apps.googleusercontent.com",
 		ClientSecret: "hi593_XKTINSKQuZQ741K1MK",
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
 		Endpoint:     google.Endpoint,
 	}
+}
+
+func getRedirectUrl() (url string) {
+	url = os.Getenv("OAUTH_REDIRECT-URL")
+	if url == "" {
+		return "http://localhost:8080/callback"
+	}
+	return url
 }
 
 func shoppingHandler(w http.ResponseWriter, _ *http.Request) {

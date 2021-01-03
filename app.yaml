@@ -7,3 +7,4 @@ env_variables:
   DB_USER: test
 #  DB_PASS: cloud*******2021 (stored in secret)
   DB_NAME: webapp
+  OAUTH_REDIRECT-URL: https://simple-webapp-sql-dot-test1-cc.ew.r.appspot.com/callback
