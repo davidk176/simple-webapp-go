@@ -11,6 +11,7 @@ import (
 type PageVar struct {
 	Title    string
 	Response string
+	Name     string
 	Artikel  []Artikel
 }
 
@@ -19,8 +20,15 @@ type Artikel struct {
 	Anz  int64
 }
 
-func shoppingHandler(w http.ResponseWriter, _ *http.Request) {
+func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start shoppingHandler")
+
+	cookie, _ := r.Cookie("accesstoken")
+	log.Print("Token from Cookie: " + cookie.Value)
+
+	if !verifyIdToken(cookie.Value) {
+		return
+	}
 
 	Var := PageVar{
 		Title: "MyShop",
@@ -35,8 +43,14 @@ func shoppingHandler(w http.ResponseWriter, _ *http.Request) {
 
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start artikelHandler")
-	_ = r.ParseForm()
 
+	cookie, _ := r.Cookie("accesstoken")
+	log.Print("Token from Cookie: " + cookie.Value)
+	if !verifyIdToken(cookie.Value) {
+		return
+	}
+
+	_ = r.ParseForm()
 	log.Print(r)
 	name := r.Form.Get("name")
 	menge, _ := strconv.ParseInt(r.Form.Get("menge"), 10, 64)
