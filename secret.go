@@ -1,4 +1,4 @@
-package secret
+package main
 
 import (
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
@@ -11,7 +11,7 @@ import (
 // accessSecretVersion accesses the payload for the given secret version if one
 // exists. The version can be a version number as a string (e.g. "5") or an projects/345398956581/secrets/pw-sqldb/versions/1 projects/345398956581/secrets/pw-sqldb
 // alias (e.g. "latest").
-func AccessSecretVersion(name string) (*string, error) {
+func accessSecretVersion(name string) (*string, error) {
 	// name := "projects/my-project/secrets/my-secret/versions/5"
 	// name := "projects/my-project/secrets/my-secret/versions/latest"
 	log.Print("access Secret " + name)

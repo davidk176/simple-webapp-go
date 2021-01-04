@@ -14,10 +14,12 @@ var (
 )
 
 func init() {
+	ClientSecret, _ := accessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
+
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
 		ClientID:     "345398956581-rq77v9k0l7uo0v7tvtgur21ld6ht3i8b.apps.googleusercontent.com",
-		ClientSecret: "hi593_XKTINSKQuZQ741K1MK",
+		ClientSecret: *ClientSecret,
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
 		Endpoint:     google.Endpoint,
 	}
