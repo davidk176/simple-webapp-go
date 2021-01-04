@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	ClientSecret, _ := accessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
+	ClientSecret, _ := accessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
 
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
