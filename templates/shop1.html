@@ -31,7 +31,9 @@
 </form>
 
 {{with $1:=.Response}}
-<p>{{$1}} zu Artikeln hinzugefügt</p>
+    <div class="alert alert-success" role="alert">
+        {{$1}} zu Artikeln hinzugefügt
+    </div>
 {{end}}
 
 {{with $2:=.Artikel}}
