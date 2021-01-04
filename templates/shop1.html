@@ -15,7 +15,7 @@
 
 
 <body>
-
+<div class="container">
 
 <form action="/add" id="shoppingcart" method="post">
     <div class="form-group">
@@ -35,20 +35,25 @@
 {{end}}
 
 {{with $2:=.Artikel}}
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Menge</th>
-    </tr>
-    {{range $2}}
-    <tr>
-        <td>{{.Name}}</td>
-        <td>{{.Anz}}</td>
-    </tr>
-    {{end}}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Menge</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{range $2}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Anz}}</td>
+        </tr>
+        {{end}}
+    </tbody>
 </table>
 {{end}}
 
+</div>
 </body>
 </html>
 
