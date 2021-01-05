@@ -97,4 +97,9 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_ = r.ParseForm()
+	log.Print(r)
+	id := r.Form.Get("deleteid")
+	log.Print("delete id: " + id)
+
 }
