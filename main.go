@@ -17,6 +17,7 @@ func main() {
 
 	mux.HandleFunc("/shop", shoppingHandler)
 	mux.HandleFunc("/add", artikelHandler)
+	mux.HandleFunc("/delete", deleteHandler)
 
 	_ = http.ListenAndServe(":"+port, mux)
 

@@ -41,7 +41,7 @@ func getArtikelFromDatabase() (artikel []Artikel) {
 
 	for rows.Next() {
 		a := Artikel{}
-		rows.Scan(&a.Name, &a.Anz, nil)
+		rows.Scan(&a.Name, &a.Anz, &a.Id)
 		artikel = append(artikel, a)
 	}
 

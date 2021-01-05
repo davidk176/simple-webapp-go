@@ -16,6 +16,7 @@ type PageVar struct {
 }
 
 type Artikel struct {
+	Id   int64
 	Name string
 	Anz  int64
 }
@@ -85,4 +86,15 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.Execute(w, nil)
+}
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Start deleteHandler")
+
+	cookie, _ := r.Cookie("accesstoken")
+	log.Print("Token from Cookie: " + cookie.Value)
+	if !verifyIdToken(cookie.Value) {
+		return
+	}
+
 }
