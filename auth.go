@@ -78,7 +78,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	userStr := string(user)
 
 	log.Print(userStr)
-	http.Redirect(w, r, "/shop?auth="+token.AccessToken, http.StatusPermanentRedirect)
+	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
