@@ -91,6 +91,10 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
 
+	Var := PageVar{
+		Title: "MyShop",
+	}
+
 	cookie, _ := r.Cookie("accesstoken")
 	log.Print("Token from Cookie: " + cookie.Value)
 	if !verifyIdToken(cookie.Value) {
@@ -101,5 +105,14 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print(r)
 	id := r.Form.Get("deleteid")
 	log.Print("delete id: " + id)
+	deleteArtikelFromDatabase(id)
+
+	t, err := template.ParseFiles("templates/shop1.html")
+
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	Var.Artikel = getArtikelFromDatabase()
+	err = t.Execute(w, Var)
 
 }

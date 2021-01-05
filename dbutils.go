@@ -48,6 +48,21 @@ func getArtikelFromDatabase() (artikel []Artikel) {
 	return artikel
 }
 
+func deleteArtikelFromDatabase(id string) (artikel Artikel) {
+	log.Print("delete Artikel with id " + id)
+	db, err := initSocketConnectionPool()
+	if err != nil {
+		log.Print(err.Error())
+	}
+	rows, _ := db.Query("DELETE FROM Artikel WHERE ID=?", id)
+
+	rows.Next()
+	a := Artikel{}
+	rows.Scan(&a.Name, &a.Anz, &a.Id)
+
+	return artikel
+}
+
 func initSocketConnectionPool() (*sql.DB, error) {
 	// [START cloud_sql_mysql_databasesql_create_socket]
 	var (
