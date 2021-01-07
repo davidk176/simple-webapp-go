@@ -24,10 +24,10 @@ type Artikel struct {
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start shoppingHandler")
 
-	cookie, _ := r.Cookie("accesstoken")
-	log.Print("Token from Cookie: " + cookie.Value)
+	cookie, _ := r.Cookie("idtoken")
+	cv := getInfoFromCookie(cookie)
 
-	if !verifyIdToken(cookie.Value) {
+	if !verifyIdToken(cv, w, r) {
 		return
 	}
 
@@ -45,9 +45,10 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start artikelHandler")
 
-	cookie, _ := r.Cookie("accesstoken")
+	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
-	if !verifyIdToken(cookie.Value) {
+	cv := getInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
 		return
 	}
 
@@ -97,7 +98,8 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	cookie, _ := r.Cookie("accesstoken")
 	log.Print("Token from Cookie: " + cookie.Value)
-	if !verifyIdToken(cookie.Value) {
+	cv := getInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
 		return
 	}
 
