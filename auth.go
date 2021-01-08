@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	tokenval "google.golang.org/api/oauth2/v2"
@@ -27,7 +29,7 @@ type Token struct {
 var (
 	googleOauthConfig *oauth2.Config
 	httpClient        = &http.Client{}
-	refresh_token     string
+	store             *sessions.CookieStore
 )
 
 const googleOAuthApi = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
@@ -42,6 +44,20 @@ func init() {
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile"},
 		Endpoint:     google.Endpoint,
 	}
+
+	//init session
+	authKey := securecookie.GenerateRandomKey(64)
+	encryptionKey := securecookie.GenerateRandomKey(32)
+
+	store = sessions.NewCookieStore(
+		authKey,
+		encryptionKey,
+	)
+
+	store.Options = &sessions.Options{
+		MaxAge:   60 * 15,
+		HttpOnly: true,
+	}
 }
 
 func getRedirectUrl() (url string) {
@@ -53,6 +69,12 @@ func getRedirectUrl() (url string) {
 }
 
 func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
+
+	//neue session anlegen
+	session, err := store.Get(r, "session-name")
+	if err != nil {
+		log.Print(err)
+	}
 
 	//state aus Cookie holen und mit state aus request vergleichen
 	state, _ := r.Cookie("oauthstate")
@@ -82,6 +104,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//request oauth2
 	jsonresult := callOAuthTokenUri(data)
 	refresh_token := jsonresult["refresh_token"].(string)
+	session.Values["refresh_token"] = refresh_token
 	log.Print(refresh_token)
 
 	//id_token in cookie setzen
@@ -97,6 +120,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	userStr := string(user)
 
 	log.Print(userStr)
+	session.Save(r, w)
 	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
 }
 
@@ -112,30 +136,22 @@ func generateStateCookie(w http.ResponseWriter) string {
 	b := make([]byte, 16)
 	rand.Read(b)
 	state := base64.URLEncoding.EncodeToString(b)
-	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: exp}
+	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: exp, HttpOnly: true}
 	http.SetCookie(w, &cookie)
 	return state
 }
 
 func generateTokenCookie(w http.ResponseWriter, n string, value string, e time.Time) {
-	cookie := http.Cookie{
-		Name:       n,
-		Value:      value,
-		Path:       "",
-		Domain:     "",
-		Expires:    e,
-		RawExpires: "",
-		MaxAge:     0,
-		Secure:     false,
-		HttpOnly:   false,
-		SameSite:   0,
-		Raw:        "",
-		Unparsed:   nil,
-	}
+	cookie := http.Cookie{Name: n, Value: value, Expires: e, HttpOnly: true}
 	http.SetCookie(w, &cookie)
 }
 
 func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
+
+	//open session
+	session, err := store.Get(r, "session-name")
+	refresh_token := session.Values["refresh_token"].(string)
+	log.Print("refresh_token from session " + refresh_token)
 
 	if t == "" {
 		log.Print("Cookie expired; --> refresh")

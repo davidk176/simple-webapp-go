@@ -96,7 +96,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		Title: "MyShop",
 	}
 
-	cookie, _ := r.Cookie("accesstoken")
+	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
 	cv := getInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
