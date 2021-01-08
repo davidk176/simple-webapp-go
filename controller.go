@@ -57,7 +57,13 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start artikelHandler")
-	session, _ := store.Get(r, "session-name")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
 
 	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
@@ -107,7 +113,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
-	session, _ := store.Get(r, "session-name")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
 
 	pv := PageVar{
 		Title:    "MyShop",
