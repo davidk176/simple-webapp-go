@@ -120,6 +120,11 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	userStr := string(user)
 
 	log.Print(userStr)
+	var usermap map[string]interface{}
+	err = json.Unmarshal([]byte(userStr), &usermap)
+	log.Print(usermap)
+	session.Values["username"] = usermap["name"]
+	session.Values["picture"] = usermap["picture"]
 	session.Save(r, w)
 	log.Print("session saved")
 	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)

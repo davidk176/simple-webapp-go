@@ -9,10 +9,13 @@ import (
 )
 
 type PageVar struct {
-	Title    string
-	Response string
-	Name     string
-	Artikel  []Artikel
+	Title      string
+	Response   string
+	Name       string
+	Picture    string
+	Givenname  string
+	Familyname string
+	Artikel    []Artikel
 }
 
 type Artikel struct {
@@ -23,6 +26,7 @@ type Artikel struct {
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start shoppingHandler")
+	session, _ := store.Get(r, "session-name")
 
 	cookie, _ := r.Cookie("idtoken")
 	cv := getInfoFromCookie(cookie)
@@ -31,15 +35,17 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/error", http.StatusPermanentRedirect)
 	}
 
-	Var := PageVar{
-		Title: "MyShop",
+	pv := PageVar{
+		Title:   "MyShop",
+		Picture: session.Values["picture"].(string),
+		Name:    session.Values["name"].(string),
 	}
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
-	err = t.Execute(w, Var)
+	err = t.Execute(w, pv)
 }
 
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
