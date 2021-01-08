@@ -38,7 +38,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	pv := PageVar{
 		Title:   "MyShop",
 		Picture: session.Values["picture"].(string),
-		Name:    session.Values["name"].(string),
+		Name:    session.Values["username"].(string),
 	}
 	t, err := template.ParseFiles("templates/shop1.html")
 
