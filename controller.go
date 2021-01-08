@@ -120,17 +120,16 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 		return
 	}
+	cookie, _ := r.Cookie("idtoken")
+	cv := getInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
+		return
+	}
 
 	pv := PageVar{
 		Title:    "MyShop",
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
-	}
-
-	cookie, _ := r.Cookie("idtoken")
-	cv := getInfoFromCookie(cookie)
-	if !verifyIdToken(cv, w, r) {
-		return
 	}
 
 	_ = r.ParseForm()
