@@ -15,11 +15,12 @@ func main() {
 	mux.HandleFunc("/", homeHandler)
 	mux.HandleFunc("/login", loginHandler)
 	mux.HandleFunc("/callback", handleGoogleCallback)
-	mux.HandleFunc("/error", errorHandler)
 
 	mux.HandleFunc("/shop", shoppingHandler)
 	mux.HandleFunc("/add", artikelHandler)
 	mux.HandleFunc("/delete", deleteHandler)
+
+	mux.HandleFunc("/error", errorHandler)
 
 	_ = http.ListenAndServe(":"+port, context.ClearHandler(mux))
 

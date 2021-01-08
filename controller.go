@@ -25,13 +25,20 @@ type Artikel struct {
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start shoppingHandler")
-	session, _ := store.Get(r, "session-name")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
 
 	cookie, _ := r.Cookie("idtoken")
 	cv := getInfoFromCookie(cookie)
 
 	if !verifyIdToken(cv, w, r) {
 		http.Redirect(w, r, "/error", http.StatusPermanentRedirect)
+		return
 	}
 
 	pv := PageVar{
