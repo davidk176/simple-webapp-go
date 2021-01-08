@@ -9,13 +9,12 @@ import (
 )
 
 type PageVar struct {
-	Title      string
-	Response   string
-	Name       string
-	Picture    string
-	Givenname  string
-	Familyname string
-	Artikel    []Artikel
+	Title    string
+	Response string
+	Name     string
+	Picture  string
+	Username string
+	Artikel  []Artikel
 }
 
 type Artikel struct {
@@ -36,9 +35,9 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pv := PageVar{
-		Title:   "MyShop",
-		Picture: session.Values["picture"].(string),
-		Name:    session.Values["username"].(string),
+		Title:    "MyShop",
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
 	}
 	t, err := template.ParseFiles("templates/shop1.html")
 
