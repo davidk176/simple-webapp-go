@@ -1,3 +1,9 @@
+/*
+Enthält alle wichtigen Funtkionen für due User-Authentifizierung mit Google OAuth2.
+Initialisiert die User-Session (gorilla sessions)
+liest und schreibt Cookies
+*/
+
 package main
 
 import (
@@ -34,6 +40,9 @@ var (
 
 const googleOAuthApi = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
+/*
+Initialisert die OAuthConfig und die Session
+*/
 func init() {
 	ClientSecret, _ := accessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
 
@@ -45,7 +54,7 @@ func init() {
 		Endpoint:     google.Endpoint,
 	}
 
-	//init session
+	//init Session mit zufälligen keys
 	authKey := securecookie.GenerateRandomKey(64)
 	encryptionKey := securecookie.GenerateRandomKey(32)
 
@@ -55,11 +64,14 @@ func init() {
 	)
 
 	store.Options = &sessions.Options{
-		MaxAge:   60 * 15,
-		HttpOnly: true,
+		MaxAge:   60 * 15, //Session läuft nach 15 min ab
+		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
 	}
 }
 
+/*
+Ermittelt Redirect-Url zur Unterscheidung von localhost und App Engine
+*/
 func getRedirectUrl() (url string) {
 	url = os.Getenv("OAUTH_REDIRECT_URL")
 	if url == "" {
@@ -68,18 +80,20 @@ func getRedirectUrl() (url string) {
 	return url
 }
 
+/*
+Wird von Google OAuth nach erfolgreichem Sign-In gerufen. Bekommt in Request den einmaligen Authentifizierungscode.
+Dieser wird gegen den Token getauscht. Anschließend werden Userinformationen ermittelt.
+*/
 func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
-
 	//neue session anlegen
 	session, err := store.Get(r, "session-name")
 	if err != nil {
 		log.Print(err)
 	}
-
-	//state aus Cookie holen und mit state aus request vergleichen
 	state, _ := r.Cookie("oauthstate")
 	log.Print(state)
 
+	//vergleicht state aus cookie und state aus r zum Schutz vor XSRF
 	if r.FormValue("state") != state.Value {
 		log.Println("invalid oauth google state")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
@@ -89,19 +103,17 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//einmaligen auth code aus r holen
 	code := r.FormValue("code")
 
-	//neue Eingabe für Request für id_token erstellen
+	//neue Eingabe für Request zur Ermittlung des eigentlichen Tokens erstellen
 	data := url.Values{}
-	data.Set("code", code)
-	data.Set("client_id", googleOauthConfig.ClientID)
-	data.Set("client_secret", googleOauthConfig.ClientSecret)
-	data.Set("redirect_uri", googleOauthConfig.RedirectURL)
-	data.Set("grant_type", "authorization_code")
-	data.Set("access_type", "offline")
-	//	data.Set("approval_prompt", "force")
-	//	data.Set("prompt", "select_account") //select_account consent
+	data.Set("code", code)                                    //der authorization_code aus dem ersten request
+	data.Set("client_id", googleOauthConfig.ClientID)         //id des gcloud projekts
+	data.Set("client_secret", googleOauthConfig.ClientSecret) //geheimes secret, in Google Secret Manager
+	data.Set("redirect_uri", googleOauthConfig.RedirectURL)   //die redirect uri
+	data.Set("grant_type", "authorization_code")              //grant über authorization_code
+	data.Set("access_type", "offline")                        //offline für refresh_token
 	log.Print(strings.NewReader(data.Encode()))
 
-	//request oauth2 and write refresh_token in session
+	//request an OAuth2, Refresh_Token in Session speichern
 	jsonresult := callOAuthTokenUri(data)
 	refresh_token := jsonresult["refresh_token"].(string)
 	session.Values["refresh_token"] = refresh_token
@@ -115,19 +127,23 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	generateTokenCookie(w, "idtoken", token.idtoken, token.expiry)
 
+	//ermittelt User-Informationen von Google und speichert diese in Session
 	responseuser, _ := http.Get(googleOAuthApi + token.accesstoken)
 	user, _ := ioutil.ReadAll(responseuser.Body)
 	userStr := string(user)
-
 	log.Print(userStr)
 	var usermap map[string]interface{}
 	err = json.Unmarshal([]byte(userStr), &usermap)
 	log.Print(usermap)
 	session.Values["username"] = usermap["name"]
 	session.Values["picture"] = usermap["picture"]
+
 	session.Save(r, w)
 	log.Print("session saved")
+
+	//Weiterleitung zu Shop
 	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
+	return
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
