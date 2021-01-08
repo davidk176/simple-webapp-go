@@ -128,7 +128,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	state := generateStateCookie(w)
 	url := googleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
-	log.Print(url)
+	log.Print("redirect to " + url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
@@ -152,15 +152,21 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 
 	//open session
 	session, err := store.Get(r, "session-name")
-	refresh_token := session.Values["refresh_token"].(string)
-	log.Print("refresh_token from session " + refresh_token)
+	refresh_token := session.Values["refresh_token"]
+
+	if refresh_token == nil {
+		log.Print("refresh_token is null --> login")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return false
+	}
+	log.Print("refresh_token from session " + refresh_token.(string))
 
 	if t == "" {
 		log.Print("Cookie expired; --> refresh")
 		data := url.Values{}
 		data.Set("client_id", googleOauthConfig.ClientID)
 		data.Set("client_secret", googleOauthConfig.ClientSecret)
-		data.Set("refresh_token", refresh_token)
+		data.Set("refresh_token", refresh_token.(string))
 		data.Set("grant_type", "refresh_token")
 		result := callOAuthTokenUri(data)
 		log.Print(result["access_token"])
