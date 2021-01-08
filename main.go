@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/context"
 	"log"
 	"net/http"
 	"os"
@@ -14,12 +15,13 @@ func main() {
 	mux.HandleFunc("/", homeHandler)
 	mux.HandleFunc("/login", loginHandler)
 	mux.HandleFunc("/callback", handleGoogleCallback)
+	mux.HandleFunc("/error", errorHandler)
 
 	mux.HandleFunc("/shop", shoppingHandler)
 	mux.HandleFunc("/add", artikelHandler)
 	mux.HandleFunc("/delete", deleteHandler)
 
-	_ = http.ListenAndServe(":"+port, mux)
+	_ = http.ListenAndServe(":"+port, context.ClearHandler(mux))
 
 }
 

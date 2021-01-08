@@ -12,6 +12,8 @@ type PageVar struct {
 	Title    string
 	Response string
 	Name     string
+	Picture  string
+	Username string
 	Artikel  []Artikel
 }
 
@@ -23,31 +25,37 @@ type Artikel struct {
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start shoppingHandler")
+	session, _ := store.Get(r, "session-name")
 
-	cookie, _ := r.Cookie("accesstoken")
-	log.Print("Token from Cookie: " + cookie.Value)
+	cookie, _ := r.Cookie("idtoken")
+	cv := getInfoFromCookie(cookie)
 
-	if !verifyIdToken(cookie.Value) {
-		return
+	if !verifyIdToken(cv, w, r) {
+		http.Redirect(w, r, "/error", http.StatusPermanentRedirect)
 	}
 
-	Var := PageVar{
-		Title: "MyShop",
+	pv := PageVar{
+		Title:    "MyShop",
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
 	}
+	pv.Artikel = getArtikelFromDatabase()
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
-	err = t.Execute(w, Var)
+	err = t.Execute(w, pv)
 }
 
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start artikelHandler")
+	session, _ := store.Get(r, "session-name")
 
-	cookie, _ := r.Cookie("accesstoken")
+	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
-	if !verifyIdToken(cookie.Value) {
+	cv := getInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
 		return
 	}
 
@@ -56,9 +64,11 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.Form.Get("name")
 	menge, _ := strconv.ParseInt(r.Form.Get("menge"), 10, 64)
 
-	Var := PageVar{
+	pv := PageVar{
 		Title:    "MyShop",
 		Response: name,
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
 	}
 
 	Artikel := Artikel{
@@ -73,8 +83,8 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
-	Var.Artikel = getArtikelFromDatabase()
-	err = t.Execute(w, Var)
+	pv.Artikel = getArtikelFromDatabase()
+	err = t.Execute(w, pv)
 
 }
 
@@ -90,14 +100,17 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
+	session, _ := store.Get(r, "session-name")
 
-	Var := PageVar{
-		Title: "MyShop",
+	pv := PageVar{
+		Title:    "MyShop",
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
 	}
 
-	cookie, _ := r.Cookie("accesstoken")
-	log.Print("Token from Cookie: " + cookie.Value)
-	if !verifyIdToken(cookie.Value) {
+	cookie, _ := r.Cookie("idtoken")
+	cv := getInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
 		return
 	}
 
@@ -112,7 +125,16 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
-	Var.Artikel = getArtikelFromDatabase()
-	err = t.Execute(w, Var)
+	pv.Artikel = getArtikelFromDatabase()
+	err = t.Execute(w, pv)
 
+}
+
+func errorHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("templates/err.html")
+
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	err = t.Execute(w, nil)
 }
