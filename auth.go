@@ -101,7 +101,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//	data.Set("prompt", "select_account") //select_account consent
 	log.Print(strings.NewReader(data.Encode()))
 
-	//request oauth2
+	//request oauth2 and write refresh_token in session
 	jsonresult := callOAuthTokenUri(data)
 	refresh_token := jsonresult["refresh_token"].(string)
 	session.Values["refresh_token"] = refresh_token
@@ -121,6 +121,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 
 	log.Print(userStr)
 	session.Save(r, w)
+	log.Print("session saved")
 	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
 }
 
@@ -144,6 +145,7 @@ func generateStateCookie(w http.ResponseWriter) string {
 func generateTokenCookie(w http.ResponseWriter, n string, value string, e time.Time) {
 	cookie := http.Cookie{Name: n, Value: value, Expires: e, HttpOnly: true}
 	http.SetCookie(w, &cookie)
+	log.Print("set new cookie " + n)
 }
 
 func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
@@ -161,8 +163,8 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 		data.Set("refresh_token", refresh_token)
 		data.Set("grant_type", "refresh_token")
 		result := callOAuthTokenUri(data)
-		log.Print(refresh_token)
 		log.Print(result["access_token"])
+		generateTokenCookie(w, "idtoken", result["id_token"].(string), time.Now().Add(time.Duration(result["expires_in"].(float64))*time.Second))
 		return true
 	}
 
@@ -173,6 +175,7 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 	log.Print(tokenInfo)
 	log.Print(err)
 	if err != nil {
+		log.Print("Token invalid!")
 		return false
 	}
 	return true
@@ -185,10 +188,6 @@ func getInfoFromCookie(c *http.Cookie) string {
 	}
 	log.Print("Cookie is null")
 	return ""
-}
-
-func refresh(w http.ResponseWriter, r *http.Request) (t Token) {
-	return t
 }
 
 func callOAuthTokenUri(data url.Values) map[string]interface{} {
