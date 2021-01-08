@@ -1,3 +1,7 @@
+/*
+Zugriff auf Secrets aus Google Secret Manager
+*/
+
 package main
 
 import (
@@ -8,6 +12,7 @@ import (
 	"log"
 )
 
+//Methode mit leichten Änderungen aus Google Doku übernommen: https://cloud.google.com/secret-manager/docs/samples/secretmanager-access-secret-version#secretmanager_access_secret_version-go
 // accessSecretVersion accesses the payload for the given secret version if one
 // exists. The version can be a version number as a string (e.g. "5") or an projects/345398956581/secrets/pw-sqldb/versions/1 projects/345398956581/secrets/pw-sqldb
 // alias (e.g. "latest").

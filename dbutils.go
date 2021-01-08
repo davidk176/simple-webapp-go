@@ -1,3 +1,7 @@
+/*
+Verbindung zur MySQL Datenbank.
+*/
+
 package main
 
 import (
@@ -10,7 +14,6 @@ import (
 func addArtikelToDatabase(artikel Artikel) {
 
 	log.Print("Write to DB: " + artikel.Name)
-	//db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/webapp")
 	db, err := initSocketConnectionPool()
 	log.Print("initialized DB socket ")
 	if err != nil {
