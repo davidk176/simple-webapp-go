@@ -28,7 +28,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	cv := getInfoFromCookie(cookie)
 
 	if !verifyIdToken(cv, w, r) {
-		return
+		http.Redirect(w, r, "/error", http.StatusPermanentRedirect)
 	}
 
 	Var := PageVar{
@@ -116,4 +116,13 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	pv.Artikel = getArtikelFromDatabase()
 	err = t.Execute(w, pv)
 
+}
+
+func errorHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("templates/err.html")
+
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	err = t.Execute(w, nil)
 }
