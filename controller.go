@@ -49,6 +49,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start artikelHandler")
+	session, _ := store.Get(r, "session-name")
 
 	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
@@ -62,9 +63,11 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.Form.Get("name")
 	menge, _ := strconv.ParseInt(r.Form.Get("menge"), 10, 64)
 
-	Var := PageVar{
+	pv := PageVar{
 		Title:    "MyShop",
 		Response: name,
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
 	}
 
 	Artikel := Artikel{
@@ -79,8 +82,8 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
-	Var.Artikel = getArtikelFromDatabase()
-	err = t.Execute(w, Var)
+	pv.Artikel = getArtikelFromDatabase()
+	err = t.Execute(w, pv)
 
 }
 
@@ -96,9 +99,12 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
+	session, _ := store.Get(r, "session-name")
 
 	pv := PageVar{
-		Title: "MyShop",
+		Title:    "MyShop",
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
 	}
 
 	cookie, _ := r.Cookie("idtoken")
