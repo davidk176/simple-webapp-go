@@ -62,7 +62,7 @@
 <div class="container-fluid" style="margin-top: 30px">
     <form>
     <div class="row" style="min-width: 700px">
-        <div class="card w-100 p-3">
+        <div class="card w-95 p-3">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
@@ -81,6 +81,46 @@
                 <!-- Calculator Tab -->
                 <div class="list-group tab-pane active" id="calc_">
                     <h3>Calculator</h3>
+                    <div class="wrapper">
+                        <div id="taschenrechner">
+                            <div id="display">
+                                <div class="inner">0</div>
+                            </div>
+
+                            <div id="ziffernblock">
+                                <table>
+                                    <tr>
+                                        <td class="btn func-plus" data-func="+">+</td>
+                                        <td class="btn func-minus" data-func="-">-</td>
+                                        <td class="btn func-mal" data-func="*">*</td>
+                                        <td class="btn func-durch" data-func="/">/</td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td data-ziffer="1">1</td>
+                                        <td data-ziffer="2">2</td>
+                                        <td data-ziffer="3">3</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-ziffer="4">4</td>
+                                        <td data-ziffer="5">5</td>
+                                        <td data-ziffer="6">6</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-ziffer="7">7</td>
+                                        <td data-ziffer="8">8</td>
+                                        <td data-ziffer="9">9</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="func-c" data-func="c">c</td>
+                                        <td data-ziffer="0">0</td>
+                                        <td class="func-sum" data-func="=">=</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- SQL Tab -->
                 <div id="sql_" class="list-group tab-pane">
@@ -150,5 +190,69 @@
 {{end}}
 </body>
 </html>
+
+<script>var $rechner = $('#taschenrechner'),
+    $display = $('#display .inner'),
+    $delete = $('.func-c'),
+    //Funktionen
+
+    $plus = $('.func-plus'),
+    $minus = $('.func-minus'),
+    $mal = $('.func-mal'),
+    $durch = $('.func-durch'),
+    $sum = $('.func-sum');
+
+$rechner.draggable({cursor:'move'});
+
+$('td[data-ziffer]').click(function(){
+    $currentFunc = false;
+    var $ziffer = $(this).data('ziffer');
+    if($display.html()==='0'){
+        $display.text($ziffer);
+    }
+    else{
+        $display.append($ziffer);
+    }
+});
+
+var $currentFunc = false;
+
+$('.btn').click(function(){
+
+    var $func = $(this).data('func');
+    if(!$currentFunc){
+        $display.append(' '+$func+' ');
+    }
+    else{
+        noticeHandler($(this),'error');
+    }
+    $currentFunc = true;
+});
+
+var noticeHandler = function(el,$class){
+    el.addClass($class);
+    newone =el.clone(true);
+    el.before(newone);
+    el.remove();
+}
+
+$sum.click(function(){
+    var $aufgabe = $display.text();
+    var $helper = $aufgabe.split(' ');
+    var $last = $helper.length-1;
+    if($helper[$last]==='' ||$aufgabe ==='0'){
+        noticeHandler($(this),'error');
+    }
+    else{
+        var $ergebnis =eval($aufgabe)
+        $display.text($ergebnis);
+    }
+})
+
+$delete.click(function(){
+    $display.text('0');
+    noticeHandler($(this),'clear');
+})
+</script>
 
 
