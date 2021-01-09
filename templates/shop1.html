@@ -19,7 +19,7 @@
 
 
 <body>
-
+<!-- Fixed Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">{{.Title}}</a>
@@ -55,65 +55,95 @@
     </div>
 </nav>
 
-<div class="container">
+<!-- Content -->
+<div class="container-fluid" style="margin-top: 30px">
+    <div class="row" style="min-width: 700px">
+        <div class="card w-100 p-3">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#calc">Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#sql">SQL-Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#nosql">No-SQL-Shop</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Content of Tabs -->
+            <div class="tab-content card-body">
+                <!-- Calculator Tab -->
+                <div id="calc" class="list-group tab-pane active">
+                    <h3>Calculator</h3>
+                </div>
+                <!-- SQL Tab -->
+                <div id="sql" class="list-group tab-pane active">
+                    <h1>SQL-Shop</h1>
+                    <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
+                    <form action="/add" id="shoppingcart" method="post">
+                        <div class="form-group">
+                            <label for="name">Artikel</label>
+                            <input type="text" name="name" id="name" maxlength="30" required="required" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="menge">Menge</label>
+                            <input type="number" name="menge" id="menge" required="required" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">absenden</button>
+                        <button type="reset" class="btn btn-secondary">zurücksetzen</button>
+                    </form>
 
-    <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h1>
+                    {{with $1:=.Response}}
+                    <div class="alert alert-success" role="alert">
+                        {{$1}} zu Artikeln hinzugefügt
+                    </div>
+                    {{end}}
 
-    <form action="/add" id="shoppingcart" method="post">
-        <div class="form-group">
-            <label for="name">Artikel</label>
-            <input type="text" name="name" id="name" maxlength="30" required="required" class="form-control">
+                    {{with $2:=.Artikel}}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Menge</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{range $2}}
+                        <tr>
+                            <td>{{.Name}}</td>
+                            <td>{{.Anz}}</td>
+                            <td>
+                                <form action="/delete" id="deleteitem" method="delete">
+                                    <button name="deleteid" class="btn btn-outline-danger" value={{.Id}}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                             class="bi bi-trash"
+                                             viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                            <path fill-rule="evenodd"
+                                                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                        Löschen
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {{end}}
+                        </tbody>
+                    </table>
+                    {{end}}
+
+                </div>
+                <!-- No SQL Tab -->
+                <div id="nosql" class="list-group tab-pane active">
+                    <h3>No-SQL-Shop</h3>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="menge">Menge</label>
-            <input type="number" name="menge" id="menge" required="required" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">absenden</button>
-        <button type="reset" class="btn btn-secondary">zurücksetzen</button>
-    </form>
-
-    {{with $1:=.Response}}
-    <div class="alert alert-success" role="alert">
-        {{$1}} zu Artikeln hinzugefügt
     </div>
-    {{end}}
-
-    {{with $2:=.Artikel}}
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Menge</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {{range $2}}
-        <tr>
-            <td>{{.Name}}</td>
-            <td>{{.Anz}}</td>
-            <td>
-                <form action="/delete" id="deleteitem" method="delete">
-                    <button name="deleteid" class="btn btn-outline-danger" value={{.Id}}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-trash"
-                             viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                            <path fill-rule="evenodd"
-                                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                        </svg>
-                        Löschen
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {{end}}
-        </tbody>
-    </table>
-    {{end}}
-
 </div>
-
 </body>
 </html>
 
