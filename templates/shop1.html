@@ -63,7 +63,7 @@
     <div class="row" style="min-width: 700px">
         <div class="card w-100 p-3">
             <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
+                <ul class="nav nav-tabs card-header-tabs" id="sqltabs">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#calc">Calculator</a>
                     </li>
@@ -149,4 +149,11 @@
 </div>
 </body>
 </html>
+
+<script type="text/javascript">
+    $('#sqltabs a').on('click', function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+</script>
 
