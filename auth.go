@@ -142,9 +142,9 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	log.Print("session saved")
 
 	//Weiterleitung zu Shop
-	log.Print(*r.URL)
-	//http.Redirect(w, r, "http://localhost:8080/shop", http.StatusMovedPermanently)
-	shoppingHandler(w, r)
+	url := &r.URL
+	log.Print(url)
+	http.Redirect(w, r, "http://localhost:8080/shop", http.StatusMovedPermanently)
 	//return
 }
 
