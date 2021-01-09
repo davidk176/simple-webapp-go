@@ -144,7 +144,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//Weiterleitung zu Shop
 	url := &r.URL
 	log.Print(url)
-	http.Redirect(w, r, "http://localhost:8080/shop", http.StatusMovedPermanently)
+	http.Redirect(w, r, "/shop", http.StatusMovedPermanently)
 	//return
 }
 
