@@ -82,7 +82,7 @@
                     <h3>Calculator</h3>
                 </div>
                 <!-- SQL Tab -->
-                <div id="sql" class="list-group tab-pane active">
+                <div id="sql" class="list-group tab-pane">
                     <h1>SQL-Shop</h1>
                     <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
                     <form action="/add" id="shoppingcart" method="post">
@@ -137,10 +137,9 @@
                         </tbody>
                     </table>
                     {{end}}
-
                 </div>
                 <!-- No SQL Tab -->
-                <div id="nosql" class="list-group tab-pane active">
+                <div id="nosql" class="list-group tab-pane">
                     <h3>No-SQL-Shop</h3>
                 </div>
             </div>
@@ -150,10 +149,4 @@
 </body>
 </html>
 
-<script type="text/javascript">
-    $('#sqltabs a').on('click', function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    })
-</script>
 
