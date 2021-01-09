@@ -60,29 +60,30 @@
 
 <!-- Content -->
 <div class="container-fluid" style="margin-top: 30px">
+    <form>
     <div class="row" style="min-width: 700px">
-        <div class="card w-100 p-3">
+        <div class="card">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="sqltabs">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#calc">Calculator</a>
+                        <a class="nav-link active" data-toggle="tab" href="#calc_">Calculator</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#sql">SQL-Shop</a>
+                        <a class="nav-link active" data-toggle="tab" href="#sql_">SQL-Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#nosql">No-SQL-Shop</a>
+                        <a class="nav-link active" data-toggle="tab" href="#nosql_">No-SQL-Shop</a>
                     </li>
                 </ul>
             </div>
             <!-- Content of Tabs -->
             <div class="tab-content card-body">
                 <!-- Calculator Tab -->
-                <div id="calc" class="list-group tab-pane active">
+                <div class="list-group tab-pane active" id="calc_">
                     <h3>Calculator</h3>
                 </div>
                 <!-- SQL Tab -->
-                <div id="sql" class="list-group tab-pane">
+                <div id="sql_" class="list-group tab-pane">
                     <h1>SQL-Shop</h1>
                     <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
                     <form action="/add" id="shoppingcart" method="post">
@@ -139,12 +140,13 @@
                     {{end}}
                 </div>
                 <!-- No SQL Tab -->
-                <div id="nosql" class="list-group tab-pane">
+                <div id="nosql_" class="list-group tab-pane">
                     <h3>No-SQL-Shop</h3>
                 </div>
             </div>
         </div>
     </div>
+    </form>
 </div>
 </body>
 </html>
