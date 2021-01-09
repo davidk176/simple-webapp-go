@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/context"
 	"log"
 	"net/http"
 	"os"
@@ -22,7 +21,8 @@ func main() {
 
 	mux.HandleFunc("/error", errorHandler)
 
-	_ = http.ListenAndServe(":"+port, context.ClearHandler(mux))
+	err := http.ListenAndServe(":"+port, mux)
+	log.Print(err)
 
 }
 

@@ -1,7 +1,7 @@
 /*
 Enthält alle wichtigen Funtkionen für due User-Authentifizierung mit Google OAuth2.
 Initialisiert die User-Session (gorilla sessions)
-liest und schreibt Cookies
+Liest und schreibt Cookies
 */
 
 package main
@@ -142,8 +142,10 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	log.Print("session saved")
 
 	//Weiterleitung zu Shop
-	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
-	return
+	log.Print(*r.URL)
+	//http.Redirect(w, r, "http://localhost:8080/shop", http.StatusMovedPermanently)
+	shoppingHandler(w, r)
+	//return
 }
 
 /*
