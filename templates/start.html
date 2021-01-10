@@ -1,11 +1,38 @@
 <!DOCTYPE html>
 
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Hallo {{.Name}}</title>
-</head>
+<header>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Include Bootsrap-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+        }
+
+        .btn {
+            border-radius: 2px;
+            text-transform: capitalize;
+            font-size: 15px;
+            padding: 10px 19px;
+            cursor: pointer
+        }
+    </style>
+</header>
 <body>
-<div class="welcome center">Welcome {{.Name}}, it is {{.Time}}</div>
+<div class="container">
+    <br>
+    <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Sign in</h1>
+    <form action="/login">
+        <button type="submit" class="btn btn-lg btn-google btn-block text-uppercase btn-outline">
+            <div class="col-md-12"><a class="btn btn-lg btn-google btn-block text-uppercase btn-outline"><img
+                    src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a></div>
+        </button>
+    </form>
+</div>
 </body>
 </html>
