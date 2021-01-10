@@ -15,4 +15,4 @@ handlers:
     secure: always
 
 error_handlers:
-  - file: static/default_error.html
+  - file: /static/default_error.html
