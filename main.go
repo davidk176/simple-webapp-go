@@ -21,7 +21,7 @@ func main() {
 	mux.HandleFunc("/add", artikelHandler)
 	mux.HandleFunc("/delete", deleteHandler)
 
-	mux.HandleFunc("/error", errorHandler)
+	//mux.HandleFunc("/error", errorHandler)
 
 	http.Handle("/", mux)
 
