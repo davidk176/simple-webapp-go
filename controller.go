@@ -24,6 +24,7 @@ type Artikel struct {
 }
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
+	panic("error")
 	log.Print("Start shoppingHandler")
 	session, err := store.Get(r, "session-name")
 
