@@ -9,6 +9,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"github.com/davidk176/simple-webapp-go/utils"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
@@ -44,7 +45,7 @@ const googleOAuthApi = "https://www.googleapis.com/oauth2/v2/userinfo?access_tok
 Initialisert die OAuthConfig und die Session
 */
 func init() {
-	ClientSecret, _ := accessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
+	ClientSecret, _ := utils.AccessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
 
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
@@ -96,7 +97,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//vergleicht state aus cookie und state aus r zum Schutz vor XSRF
 	if r.FormValue("state") != state.Value {
 		log.Println("invalid oauth google state")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		return
 	}
 
@@ -142,10 +143,11 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	log.Print("session saved")
 
 	//Weiterleitung zu Shop
-	url := &r.URL
+	url := *r.URL
 	log.Print(url)
-	http.Redirect(w, r, "/shop", http.StatusMovedPermanently)
-	//return
+	log.Print(err)
+	http.Redirect(w, r, "/shop", http.StatusFound)
+	return
 }
 
 /*
