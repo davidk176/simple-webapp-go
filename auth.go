@@ -7,7 +7,6 @@ Liest und schreibt Cookies
 package main
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"github.com/davidk176/simple-webapp-go/utils"
 	"github.com/gorilla/securecookie"
@@ -17,7 +16,6 @@ import (
 	tokenval "google.golang.org/api/oauth2/v2"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -126,7 +124,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 		idtoken:     jsonresult["id_token"].(string),
 		expiry:      time.Now().Add(time.Duration(jsonresult["expires_in"].(float64)) * time.Second),
 	}
-	generateTokenCookie(w, "idtoken", token.idtoken, token.expiry)
+	utils.GenerateTokenCookie(w, "idtoken", token.idtoken, token.expiry)
 
 	//ermittelt User-Informationen von Google und speichert diese in Session
 	responseuser, _ := http.Get(googleOAuthApi + token.accesstoken)
@@ -154,32 +152,10 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 Ausgangspunkt des Logins. Generiert State-Cookie und leitet an OAuth-Url weiter
 */
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	state := generateStateCookie(w)
+	state := utils.GenerateStateCookie(w)
 	url := googleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 	log.Print("redirect to " + url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-}
-
-/*
-generiert Cookie mit random state
-*/
-func generateStateCookie(w http.ResponseWriter) string {
-	var exp = time.Now().Add(365 * 24 * time.Hour)
-	b := make([]byte, 16)
-	rand.Read(b)
-	state := base64.URLEncoding.EncodeToString(b)
-	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: exp, HttpOnly: true}
-	http.SetCookie(w, &cookie)
-	return state
-}
-
-/*
-schreibt Token in Cookie
-*/
-func generateTokenCookie(w http.ResponseWriter, n string, value string, e time.Time) {
-	cookie := http.Cookie{Name: n, Value: value, Expires: e, HttpOnly: true}
-	http.SetCookie(w, &cookie)
-	log.Print("set new cookie " + n)
 }
 
 /*
@@ -209,7 +185,7 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 		data.Set("grant_type", "refresh_token")
 		result := callOAuthTokenUri(data)
 		log.Print(result["access_token"])
-		generateTokenCookie(w, "idtoken", result["id_token"].(string), time.Now().Add(time.Duration(result["expires_in"].(float64))*time.Second))
+		utils.GenerateTokenCookie(w, "idtoken", result["id_token"].(string), time.Now().Add(time.Duration(result["expires_in"].(float64))*time.Second))
 		return true
 	}
 	//validiert Token mittels Aufruf von OAuth2-API
@@ -224,18 +200,6 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 	return true
-}
-
-/*
-Value aus Cookie
-*/
-func getInfoFromCookie(c *http.Cookie) string {
-	if c != nil {
-		log.Print("Token from Cookie: " + c.Value)
-		return c.Value
-	}
-	log.Print("Cookie is null")
-	return ""
 }
 
 /*

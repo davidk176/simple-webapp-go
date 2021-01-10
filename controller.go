@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/davidk176/simple-webapp-go/utils"
 	_ "golang.org/x/oauth2/google"
 	"html/template"
 	"log"
@@ -34,7 +35,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie, _ := r.Cookie("idtoken")
-	cv := getInfoFromCookie(cookie)
+	cv := utils.GetInfoFromCookie(cookie)
 
 	if !verifyIdToken(cv, w, r) {
 		http.Redirect(w, r, "/error", http.StatusPermanentRedirect)
@@ -67,7 +68,7 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 
 	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
-	cv := getInfoFromCookie(cookie)
+	cv := utils.GetInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
 		return
 	}
@@ -121,7 +122,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	cookie, _ := r.Cookie("idtoken")
-	cv := getInfoFromCookie(cookie)
+	cv := utils.GetInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
 		return
 	}
