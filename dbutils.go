@@ -7,6 +7,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/davidk176/simple-webapp-go/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
@@ -71,7 +72,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 	// [START cloud_sql_mysql_databasesql_create_socket]
 	var (
 		dbUser                 = os.Getenv("DB_USER")
-		dbPwd, err             = accessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
+		dbPwd, err             = utils.AccessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
 		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME")
 		dbName                 = os.Getenv("DB_NAME")
 	)
