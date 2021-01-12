@@ -1,4 +1,8 @@
-package main
+/*
+Zugriff auf Secrets aus Google Secret Manager
+*/
+
+package utils
 
 import (
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
@@ -8,10 +12,11 @@ import (
 	"log"
 )
 
+//Methode mit leichten Änderungen aus Google Doku übernommen: https://cloud.google.com/secret-manager/docs/samples/secretmanager-access-secret-version#secretmanager_access_secret_version-go
 // accessSecretVersion accesses the payload for the given secret version if one
 // exists. The version can be a version number as a string (e.g. "5") or an projects/345398956581/secrets/pw-sqldb/versions/1 projects/345398956581/secrets/pw-sqldb
 // alias (e.g. "latest").
-func accessSecretVersion(name string) (*string, error) {
+func AccessSecretVersion(name string) (*string, error) {
 	// name := "projects/my-project/secrets/my-secret/versions/5"
 	// name := "projects/my-project/secrets/my-secret/versions/latest"
 	log.Print("access Secret " + name)

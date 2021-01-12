@@ -1,8 +1,14 @@
+/*
+Enthält alle wichtigen Funtkionen für due User-Authentifizierung mit Google OAuth2.
+Initialisiert die User-Session (gorilla sessions)
+Liest und schreibt Cookies
+*/
+
 package main
 
 import (
-	"encoding/base64"
 	"encoding/json"
+	"github.com/davidk176/simple-webapp-go/utils"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
@@ -10,7 +16,6 @@ import (
 	tokenval "google.golang.org/api/oauth2/v2"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -34,8 +39,11 @@ var (
 
 const googleOAuthApi = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
+/*
+Initialisert die OAuthConfig und die Session
+*/
 func init() {
-	ClientSecret, _ := accessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
+	ClientSecret, _ := utils.AccessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
 
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
@@ -45,7 +53,7 @@ func init() {
 		Endpoint:     google.Endpoint,
 	}
 
-	//init session
+	//init Session mit zufälligen keys
 	authKey := securecookie.GenerateRandomKey(64)
 	encryptionKey := securecookie.GenerateRandomKey(32)
 
@@ -55,11 +63,14 @@ func init() {
 	)
 
 	store.Options = &sessions.Options{
-		MaxAge:   60 * 15,
-		HttpOnly: true,
+		MaxAge:   60 * 15, //Session läuft nach 15 min ab
+		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
 	}
 }
 
+/*
+Ermittelt Redirect-Url zur Unterscheidung von localhost und App Engine
+*/
 func getRedirectUrl() (url string) {
 	url = os.Getenv("OAUTH_REDIRECT_URL")
 	if url == "" {
@@ -68,40 +79,40 @@ func getRedirectUrl() (url string) {
 	return url
 }
 
+/*
+Wird von Google OAuth nach erfolgreichem Sign-In gerufen. Bekommt in Request den einmaligen Authentifizierungscode.
+Dieser wird gegen den Token getauscht. Anschließend werden Userinformationen ermittelt.
+*/
 func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
-
 	//neue session anlegen
 	session, err := store.Get(r, "session-name")
 	if err != nil {
 		log.Print(err)
 	}
-
-	//state aus Cookie holen und mit state aus request vergleichen
 	state, _ := r.Cookie("oauthstate")
 	log.Print(state)
 
+	//vergleicht state aus cookie und state aus r zum Schutz vor XSRF
 	if r.FormValue("state") != state.Value {
 		log.Println("invalid oauth google state")
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 		return
 	}
 
 	//einmaligen auth code aus r holen
 	code := r.FormValue("code")
 
-	//neue Eingabe für Request für id_token erstellen
+	//neue Eingabe für Request zur Ermittlung des eigentlichen Tokens erstellen
 	data := url.Values{}
-	data.Set("code", code)
-	data.Set("client_id", googleOauthConfig.ClientID)
-	data.Set("client_secret", googleOauthConfig.ClientSecret)
-	data.Set("redirect_uri", googleOauthConfig.RedirectURL)
-	data.Set("grant_type", "authorization_code")
-	data.Set("access_type", "offline")
-	//	data.Set("approval_prompt", "force")
-	//	data.Set("prompt", "select_account") //select_account consent
+	data.Set("code", code)                                    //der authorization_code aus dem ersten request
+	data.Set("client_id", googleOauthConfig.ClientID)         //id des gcloud projekts
+	data.Set("client_secret", googleOauthConfig.ClientSecret) //geheimes secret, in Google Secret Manager
+	data.Set("redirect_uri", googleOauthConfig.RedirectURL)   //die redirect uri
+	data.Set("grant_type", "authorization_code")              //grant über authorization_code
+	data.Set("access_type", "offline")                        //offline für refresh_token
 	log.Print(strings.NewReader(data.Encode()))
 
-	//request oauth2 and write refresh_token in session
+	//request an OAuth2, Refresh_Token in Session speichern
 	jsonresult := callOAuthTokenUri(data)
 	refresh_token := jsonresult["refresh_token"].(string)
 	session.Values["refresh_token"] = refresh_token
@@ -113,52 +124,50 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 		idtoken:     jsonresult["id_token"].(string),
 		expiry:      time.Now().Add(time.Duration(jsonresult["expires_in"].(float64)) * time.Second),
 	}
-	generateTokenCookie(w, "idtoken", token.idtoken, token.expiry)
+	utils.GenerateTokenCookie(w, "idtoken", token.idtoken, token.expiry)
 
+	//ermittelt User-Informationen von Google und speichert diese in Session
 	responseuser, _ := http.Get(googleOAuthApi + token.accesstoken)
 	user, _ := ioutil.ReadAll(responseuser.Body)
 	userStr := string(user)
-
 	log.Print(userStr)
 	var usermap map[string]interface{}
 	err = json.Unmarshal([]byte(userStr), &usermap)
 	log.Print(usermap)
 	session.Values["username"] = usermap["name"]
 	session.Values["picture"] = usermap["picture"]
+
 	session.Save(r, w)
 	log.Print("session saved")
-	http.Redirect(w, r, "/shop", http.StatusPermanentRedirect)
+
+	//Weiterleitung zu Shop
+	url := *r.URL
+	log.Print(url)
+	log.Print(err)
+	http.Redirect(w, r, "/shop", http.StatusFound)
+	return
 }
 
+/*
+Ausgangspunkt des Logins. Generiert State-Cookie und leitet an OAuth-Url weiter
+*/
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	state := generateStateCookie(w)
+	state := utils.GenerateStateCookie(w)
 	url := googleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 	log.Print("redirect to " + url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-func generateStateCookie(w http.ResponseWriter) string {
-	var exp = time.Now().Add(365 * 24 * time.Hour)
-	b := make([]byte, 16)
-	rand.Read(b)
-	state := base64.URLEncoding.EncodeToString(b)
-	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: exp, HttpOnly: true}
-	http.SetCookie(w, &cookie)
-	return state
-}
-
-func generateTokenCookie(w http.ResponseWriter, n string, value string, e time.Time) {
-	cookie := http.Cookie{Name: n, Value: value, Expires: e, HttpOnly: true}
-	http.SetCookie(w, &cookie)
-	log.Print("set new cookie " + n)
-}
-
+/*
+Validiert den It-Token des Requests. Falls kein Id-Token vorhanden, wird mit dem Refresh-Token aus der Session ein neuer geholt.
+*/
 func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 
 	//open session
 	session, err := store.Get(r, "session-name")
 	refresh_token := session.Values["refresh_token"]
 
+	//wenn kein refresh_token vorhanden, neuer Login notwendig
 	if refresh_token == nil {
 		log.Print("refresh_token is null --> login")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
@@ -166,6 +175,7 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 	}
 	log.Print("refresh_token from session " + refresh_token.(string))
 
+	//leerer Token -> vermutlich Cookie expired -> hole neuen token
 	if t == "" {
 		log.Print("Cookie expired; --> refresh")
 		data := url.Values{}
@@ -175,10 +185,10 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 		data.Set("grant_type", "refresh_token")
 		result := callOAuthTokenUri(data)
 		log.Print(result["access_token"])
-		generateTokenCookie(w, "idtoken", result["id_token"].(string), time.Now().Add(time.Duration(result["expires_in"].(float64))*time.Second))
+		utils.GenerateTokenCookie(w, "idtoken", result["id_token"].(string), time.Now().Add(time.Duration(result["expires_in"].(float64))*time.Second))
 		return true
 	}
-
+	//validiert Token mittels Aufruf von OAuth2-API
 	oauth2Service, err := tokenval.New(httpClient)
 	tokenInfoCall := oauth2Service.Tokeninfo()
 	tokenInfoCall.IdToken(t)
@@ -192,15 +202,9 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
-func getInfoFromCookie(c *http.Cookie) string {
-	if c != nil {
-		log.Print("Token from Cookie: " + c.Value)
-		return c.Value
-	}
-	log.Print("Cookie is null")
-	return ""
-}
-
+/*
+Ruft googleapis/oauth2/v4/token mit den übergebenen Parametern.
+*/
 func callOAuthTokenUri(data url.Values) map[string]interface{} {
 	client := &http.Client{}
 	r, err := http.NewRequest("POST", "https://www.googleapis.com/oauth2/v4/token", strings.NewReader(data.Encode())) // URL-encoded payload
@@ -217,7 +221,7 @@ func callOAuthTokenUri(data url.Values) map[string]interface{} {
 	log.Println(res.Status)
 	defer res.Body.Close()
 
-	//erstelle map aus response
+	//erstelle Map aus response
 	resp, err := ioutil.ReadAll(res.Body)
 	var jsonresult map[string]interface{}
 	err = json.Unmarshal(resp, &jsonresult)

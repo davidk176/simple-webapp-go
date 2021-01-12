@@ -1,8 +1,14 @@
+/*
+Verbindung zur MySQL Datenbank.
+*/
+
 package main
 
 import (
 	"database/sql"
 	"fmt"
+	"github.com/davidk176/simple-webapp-go/utils"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
 )
@@ -10,7 +16,6 @@ import (
 func addArtikelToDatabase(artikel Artikel) {
 
 	log.Print("Write to DB: " + artikel.Name)
-	//db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/webapp")
 	db, err := initSocketConnectionPool()
 	log.Print("initialized DB socket ")
 	if err != nil {
@@ -67,7 +72,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 	// [START cloud_sql_mysql_databasesql_create_socket]
 	var (
 		dbUser                 = os.Getenv("DB_USER")
-		dbPwd, err             = accessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
+		dbPwd, err             = utils.AccessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
 		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME")
 		dbName                 = os.Getenv("DB_NAME")
 	)

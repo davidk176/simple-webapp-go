@@ -3,26 +3,24 @@ package main
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	port := getPort()
+	router := mux.NewRouter()
+	router.HandleFunc("/", homeHandler)
+	router.HandleFunc("/login", loginHandler)
+	router.HandleFunc("/callback", handleGoogleCallback)
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", homeHandler)
-	mux.HandleFunc("/login", loginHandler)
-	mux.HandleFunc("/callback", handleGoogleCallback)
-	mux.HandleFunc("/error", errorHandler)
+	router.HandleFunc("/shop", shoppingHandler)
+	router.HandleFunc("/add", artikelHandler)
+	router.HandleFunc("/delete", deleteHandler)
 
-	mux.HandleFunc("/shop", shoppingHandler)
-	mux.HandleFunc("/add", artikelHandler)
-	mux.HandleFunc("/delete", deleteHandler)
-
-	_ = http.ListenAndServe(":"+port, context.ClearHandler(mux))
-
+	http.Handle("/", router)
+	log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
 }
 
 func getPort() (port string) {

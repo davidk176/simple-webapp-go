@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/davidk176/simple-webapp-go/utils"
 	_ "golang.org/x/oauth2/google"
 	"html/template"
 	"log"
@@ -25,13 +26,20 @@ type Artikel struct {
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start shoppingHandler")
-	session, _ := store.Get(r, "session-name")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
 
 	cookie, _ := r.Cookie("idtoken")
-	cv := getInfoFromCookie(cookie)
+	cv := utils.GetInfoFromCookie(cookie)
 
 	if !verifyIdToken(cv, w, r) {
 		http.Redirect(w, r, "/error", http.StatusPermanentRedirect)
+		return
 	}
 
 	pv := PageVar{
@@ -39,7 +47,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
 	}
-	pv.Artikel = getArtikelFromDatabase()
+	//pv.Artikel = getArtikelFromDatabase()
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
@@ -50,11 +58,17 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 
 func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start artikelHandler")
-	session, _ := store.Get(r, "session-name")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
 
 	cookie, _ := r.Cookie("idtoken")
 	log.Print("Token from Cookie: " + cookie.Value)
-	cv := getInfoFromCookie(cookie)
+	cv := utils.GetInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
 		return
 	}
@@ -100,18 +114,23 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
-	session, _ := store.Get(r, "session-name")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
+	cookie, _ := r.Cookie("idtoken")
+	cv := utils.GetInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
+		return
+	}
 
 	pv := PageVar{
 		Title:    "MyShop",
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
-	}
-
-	cookie, _ := r.Cookie("idtoken")
-	cv := getInfoFromCookie(cookie)
-	if !verifyIdToken(cv, w, r) {
-		return
 	}
 
 	_ = r.ParseForm()
@@ -130,11 +149,11 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func errorHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("templates/err.html")
+/*func errorHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("templates/default_error.html")
 
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
 	err = t.Execute(w, nil)
-}
+}*/
