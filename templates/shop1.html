@@ -35,23 +35,14 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/shop">Artikel hinzufügen</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Preise</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
             </ul>
         </div>
         <div class="collapse navbar-collapse" id="navbarNavPicture">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/"><img
-                            src={{.Picture}}
-                            alt="user" style="width:30px;height:30px;" title={{.Username}}> </a>
+                    <a class="nav-link active" aria-current="page" href="/">
+                        <img src={{.Picture}} alt="user" style="width:30px;height:30px;" title={{.Username}}>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -59,8 +50,7 @@
 </nav>
 
 <!-- Content -->
-<div class="container-fluid" style="margin-top: 30px">
-    <form>
+<div class="container-fluid">
     <div class="row" style="min-width: 700px">
         <div class="card w-100 p-3">
             <div class="card-header">
@@ -79,23 +69,24 @@
             <!-- Content of Tabs -->
             <div class="tab-content card-body">
                 <!-- Calculator Tab -->
-                <div class="list-group tab-pane active" id="calc_">
-                    <h3>Calculator</h3>
+                <div id="calc_" class="list-group tab-pane active" >
+                    <h2>Calculator</h2>
                 </div>
                 <!-- SQL Tab -->
                 <div id="sql_" class="list-group tab-pane">
-                    <h1>SQL-Shop</h1>
+                    <h2>SQL-Shop</h2>
 
                 </div>
                 <!-- No SQL Tab -->
                 <div id="nosql_" class="list-group tab-pane">
-                    <h3>No-SQL-Shop</h3>
+                    <h2>No-SQL-Shop</h2>
                 </div>
             </div>
         </div>
     </div>
-    </form>
 </div>
+
+
 {{with $1:=.Response}}
 <div class="alert alert-success" role="alert">
     {{$1}} zu Artikeln hinzugefügt
