@@ -1,0 +1,1 @@
+/* Javascript Content for simple webshop */
