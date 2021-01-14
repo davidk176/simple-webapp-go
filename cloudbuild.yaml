@@ -7,7 +7,7 @@ steps:
   - id: 'Test'
     name: "gcr.io/cloud-builders/go"
     args: ["test", "simple-webapp-go"]
-    env: ["GOPATH=."]
+    env: ["GOPATH=/fakepath"]
 
   - id: 'Deploy App'
     name: "gcr.io/cloud-builders/gcloud"
