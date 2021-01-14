@@ -1,5 +1,5 @@
 /* Additional CSS Content for simple webshop */
 
 body{
-    !important background: dimgrey;
+    background: dimgrey; !important
 }
