@@ -4,10 +4,15 @@ steps:
     args: [ 'go', 'build', '.' ]
     env: [ 'GO111MODULE=on' ]
 
+  - id: 'Go Linter'
+    name: "golangci/golangci-lint"
+    args: ["golangci-lint","run"]
+
   - id: 'Test'
     name: "gcr.io/cloud-builders/go"
     args: ["test", "."]
     env: ["GOPATH=/fakepath"]
+    #cloud-builders/go verlangt GOPATH
 
   - id: 'Deploy App'
     name: "gcr.io/cloud-builders/gcloud"
