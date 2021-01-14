@@ -6,7 +6,7 @@ steps:
 
   - id: 'Test'
     name: "gcr.io/cloud-builders/go"
-    args: ["test", "/"]
+    args: ["test", "."]
     env: ["GOPATH=/fakepath"]
 
   - id: 'Deploy App'
