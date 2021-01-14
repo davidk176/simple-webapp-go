@@ -5,7 +5,7 @@ steps:
     env: [ 'GO111MODULE=on' ]
 
   - id: 'Test'
-    name: "gcr.io/cloud-builders/gcloud"
+    name: "gcr.io/cloud-builders/go"
     args: ["test", "simple-webapp-go"]
 
   - id: 'Deploy App'
