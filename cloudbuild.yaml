@@ -1,10 +1,15 @@
 steps:
-  - id: 'pull dependencies'
+  - id: 'Pull dependencies'
     name: 'golang'
     args: [ 'go', 'build', '.' ]
     env: [ 'GO111MODULE=on' ]
 
-  - id: 'deploy app'
+  - id: 'Test'
+    name: "gcr.io/cloud-builders/gcloud"
+    args: ["test", "simple-webapp-go"]
+
+  - id: 'Deploy App'
     name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
+
 timeout: "1600s"
