@@ -72,28 +72,30 @@
                 <!-- SQL Tab -->
                 <div id="sql_" class="list-group tab-pane active">
                     <h2>SQL-Shop</h2>
-                    <div class="row">
-                        <!-- Stack Cards for design purposes -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
-                            </div>
-                            <div class="card-body">
-                                <form action="/add" id="shoppingcart" method="post">
-                                    <div class="form-group">
-                                        <label for="name">Artikel</label>
-                                        <input type="text" name="name" id="name" maxlength="30" required="required" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="menge">Menge</label>
-                                        <input type="number" name="menge" id="menge" required="required" class="form-control">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">absenden</button>
-                                    <button type="reset" class="btn btn-secondary">zurücksetzen</button>
-                                </form>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Stack Cards for design purposes -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form action="/add" id="shoppingcart" method="post">
+                                        <div class="form-group">
+                                            <label for="name">Artikel</label>
+                                            <input type="text" name="name" id="name" maxlength="30" required="required" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="menge">Menge</label>
+                                            <input type="number" name="menge" id="menge" required="required" class="form-control">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">absenden</button>
+                                        <button type="reset" class="btn btn-secondary">zurücksetzen</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                   </div>
 
                     <!-- Response Alert -->
                     {{with $1:=.Response}}
