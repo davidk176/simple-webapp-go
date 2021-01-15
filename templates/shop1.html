@@ -71,12 +71,23 @@
             <div class="tab-content card-body">
                 <!-- SQL Tab -->
                 <div id="sql_" class="list-group tab-pane active">
+
+                    <!-- Stack Cards for design purposes -->
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
                     <h2>SQL-Shop</h2>
                     {{with $1:=.Response}}
                     <div class="alert alert-success" role="alert">
                         {{$1}} zu Artikeln hinzugefügt
                     </div>
                     {{end}}
+
 
                     <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
                     <form action="/add" id="shoppingcart" method="post">
