@@ -78,6 +78,12 @@ func init() {
 		encryptionKey,
 	)
 
+	store.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   60 * 15,
+		HttpOnly: true,
+	}
+
 }
 
 /*
