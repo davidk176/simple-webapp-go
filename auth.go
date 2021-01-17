@@ -37,7 +37,10 @@ var (
 	store             *sessions.CookieStore
 )
 
-const googleOAuthApi = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+const (
+	googleOAuthApiV2 = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+	googleOAuthApiV4 = "https://www.googleapis.com/oauth2/v4/token"
+)
 
 /*
 Initialisert die OAuthConfig und die Session
@@ -128,7 +131,7 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	utils.GenerateTokenCookie(w, "idtoken", token.idtoken, token.expiry)
 
 	//ermittelt User-Informationen von Google und speichert diese in Session
-	responseuser, _ := http.Get(googleOAuthApi + token.accesstoken)
+	responseuser, _ := http.Get(googleOAuthApiV2 + token.accesstoken)
 	user, _ := ioutil.ReadAll(responseuser.Body)
 	userStr := string(user)
 	log.Print(userStr)
@@ -158,7 +161,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 /*
-Validiert den It-Token des Requests. Falls kein Id-Token vorhanden, wird mit dem Refresh-Token aus der Session ein neuer geholt.
+Validiert den Id-Token des Requests. Falls kein Id-Token vorhanden, wird mit dem Refresh-Token aus der Session ein neuer geholt.
 */
 func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 
@@ -206,7 +209,7 @@ Ruft googleapis/oauth2/v4/token mit den übergebenen Parametern.
 */
 func callOAuthTokenUri(data url.Values) map[string]interface{} {
 	client := &http.Client{}
-	r, err := http.NewRequest("POST", "https://www.googleapis.com/oauth2/v4/token", strings.NewReader(data.Encode())) // URL-encoded payload
+	r, err := http.NewRequest("POST", googleOAuthApiV4, strings.NewReader(data.Encode())) // URL-encoded payload
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -222,8 +225,8 @@ func callOAuthTokenUri(data url.Values) map[string]interface{} {
 
 	//erstelle Map aus response
 	resp, err := ioutil.ReadAll(res.Body)
-	var jsonresult map[string]interface{}
-	err = json.Unmarshal(resp, &jsonresult)
-	log.Print(jsonresult)
-	return jsonresult
+	var result map[string]interface{}
+	err = json.Unmarshal(resp, &result)
+	log.Print(result)
+	return result
 }
