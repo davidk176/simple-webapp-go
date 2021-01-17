@@ -65,6 +65,7 @@ func init() {
 	store.Options = &sessions.Options{
 		MaxAge:   60 * 15, //Session läuft nach 15 min ab
 		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
+		Secure:   true,    //erlaubt nur https
 	}
 }
 
@@ -141,8 +142,6 @@ func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	log.Print("session saved")
 
 	//Weiterleitung zu Shop
-	url := *r.URL
-	log.Print(url)
 	log.Print(err)
 	http.Redirect(w, r, "/shop", http.StatusFound)
 	return
