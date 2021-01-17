@@ -230,4 +230,3 @@ func callOAuthTokenUri(data url.Values) map[string]interface{} {
 	log.Print(result)
 	return result
 }
-© 2021 GitHub, Inc.
