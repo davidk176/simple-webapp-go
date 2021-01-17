@@ -24,7 +24,7 @@ func GetInfoFromCookie(c *http.Cookie) string {
 schreibt Token in Cookie
 */
 func GenerateTokenCookie(w http.ResponseWriter, n string, value string, e time.Time) {
-	cookie := http.Cookie{Name: n, Value: value, Expires: e, HttpOnly: true}
+	cookie := http.Cookie{Name: n, Value: value, Expires: e, HttpOnly: true, Secure: true}
 	http.SetCookie(w, &cookie)
 	log.Print("set new cookie " + n)
 }
@@ -37,7 +37,7 @@ func GenerateStateCookie(w http.ResponseWriter) string {
 	b := make([]byte, 16)
 	rand.Read(b)
 	state := base64.URLEncoding.EncodeToString(b)
-	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: exp, HttpOnly: true}
+	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: exp, HttpOnly: true, Secure: true}
 	http.SetCookie(w, &cookie)
 	return state
 }
