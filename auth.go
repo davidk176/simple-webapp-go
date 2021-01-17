@@ -34,8 +34,7 @@ type Token struct {
 var (
 	googleOauthConfig *oauth2.Config
 	httpClient        = &http.Client{}
-	//store             *sessions.CookieStore
-	store *sessions.FilesystemStore
+	store             *sessions.CookieStore
 )
 
 const (
@@ -61,7 +60,7 @@ func init() {
 	authKey := securecookie.GenerateRandomKey(64)
 	encryptionKey := securecookie.GenerateRandomKey(32)
 
-	/*store = sessions.NewCookieStore(
+	store = sessions.NewCookieStore(
 		authKey,
 		encryptionKey,
 	)
@@ -70,24 +69,11 @@ func init() {
 		MaxAge:   60 * 15, //Session läuft nach 15 min ab
 		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
 		Secure:   true,    //erlaubt nur https
-	}*/
-
-	store = sessions.NewFilesystemStore(
-		"sessions/",
-		authKey,
-		encryptionKey,
-	)
-
-	store.Options = &sessions.Options{
-		Path:     "/",
-		MaxAge:   60 * 15,
-		HttpOnly: true,
 	}
-
 }
 
 /*
-	Ermittelt Redirect-Url zur Unterscheidung von localhost und App Engine
+Ermittelt Redirect-Url zur Unterscheidung von localhost und App Engine
 */
 func getRedirectUrl() (url string) {
 	url = os.Getenv("OAUTH_REDIRECT_URL")
@@ -244,3 +230,4 @@ func callOAuthTokenUri(data url.Values) map[string]interface{} {
 	log.Print(result)
 	return result
 }
+© 2021 GitHub, Inc.
