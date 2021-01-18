@@ -7,9 +7,9 @@ Liest und schreibt Cookies
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"github.com/davidk176/simple-webapp-go/utils"
+	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -22,9 +22,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"cloud.google.com/go/firestore"
-	firestoregorilla "github.com/GoogleCloudPlatform/firestore-gorilla-sessions"
 )
 
 type Token struct {
@@ -37,8 +34,7 @@ type Token struct {
 var (
 	googleOauthConfig *oauth2.Config
 	httpClient        = &http.Client{}
-	//store             *sessions.CookieStore
-	store sessions.Store
+	store             *sessions.CookieStore
 )
 
 const (
@@ -61,24 +57,19 @@ func init() {
 	}
 
 	//init Session mit zufälligen keys
-	//	authKey := securecookie.GenerateRandomKey(64)
-	//	encryptionKey := securecookie.GenerateRandomKey(32)
+	authKey := securecookie.GenerateRandomKey(64)
+	encryptionKey := securecookie.GenerateRandomKey(32)
 
-	ctx := context.Background()
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	client, err := firestore.NewClient(ctx, projectID)
+	store = sessions.NewCookieStore(
+		authKey,
+		encryptionKey,
+	)
 
-	if err != nil {
-		log.Fatalf("firestore.NewClient: %v", err)
+	store.Options = &sessions.Options{
+		MaxAge:   60 * 15, //Session läuft nach 15 min ab
+		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
+		Secure:   true,    //erlaubt nur https
 	}
-	ts, err := firestoregorilla.New(ctx, client)
-	if err != nil {
-		log.Fatalf("firestoregorilla.New: %v", err)
-	}
-	store = ts
-	log.Print("ts", ts)
-	log.Print("store", store)
-
 }
 
 /*
