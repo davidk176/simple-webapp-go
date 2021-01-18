@@ -10,7 +10,7 @@ import (
 	"encoding/json"
 	"github.com/davidk176/simple-webapp-go/utils"
 	"github.com/gorilla/securecookie"
-	"github.com/gorilla/sessions"
+	"github.com/quasoft/memstore"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	tokenval "google.golang.org/api/oauth2/v2"
@@ -34,7 +34,7 @@ type Token struct {
 var (
 	googleOauthConfig *oauth2.Config
 	httpClient        = &http.Client{}
-	store             *sessions.CookieStore
+	store             *memstore.MemStore
 )
 
 const (
@@ -60,16 +60,11 @@ func init() {
 	authKey := securecookie.GenerateRandomKey(64)
 	encryptionKey := securecookie.GenerateRandomKey(32)
 
-	store = sessions.NewCookieStore(
+	store = memstore.NewMemStore(
 		authKey,
 		encryptionKey,
 	)
 
-	store.Options = &sessions.Options{
-		MaxAge:   60 * 15, //Session läuft nach 15 min ab
-		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
-		Secure:   true,    //erlaubt nur https
-	}
 }
 
 /*
