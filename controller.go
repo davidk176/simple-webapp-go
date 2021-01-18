@@ -25,8 +25,11 @@ type Artikel struct {
 }
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Print("Start shoppingHandler")
+	log.Print("shoppingHandler: store", store)
 	session, err := store.Get(r, "session-name")
+	log.Print("Session", session)
 
 	if err != nil {
 		log.Print(err)
@@ -47,7 +50,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
 	}
-	pv.Artikel = getArtikelFromDatabase()
+	//pv.Artikel = getArtikelFromDatabase()
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
