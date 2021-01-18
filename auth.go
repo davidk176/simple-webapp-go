@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"github.com/davidk176/simple-webapp-go/utils"
 	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 	"github.com/quasoft/memstore"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -64,6 +65,12 @@ func init() {
 		authKey,
 		encryptionKey,
 	)
+
+	store.Options = &sessions.Options{
+		MaxAge:   60 * 15, //Session läuft nach 15 min ab
+		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
+		Secure:   true,    //erlaubt nur https
+	}
 
 }
 
