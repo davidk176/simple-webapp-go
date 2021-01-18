@@ -75,6 +75,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("firestoregorilla.New: %v", err)
 	}
+	log.Print("store", store)
 	store = ts
 
 }
