@@ -2,7 +2,8 @@ package main
 
 import (
 	_ "github.com/go-sql-driver/mysql"
-	"google.golang.org/appengine"
+	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
@@ -14,19 +15,18 @@ func init() {
 
 func main() {
 
-	//	router := mux.NewRouter()
-	http.HandleFunc("/", homeHandler)
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/callback", handleGoogleCallback)
+	router := mux.NewRouter()
+	router.HandleFunc("/", homeHandler)
+	router.HandleFunc("/login", loginHandler)
+	router.HandleFunc("/callback", handleGoogleCallback)
 
-	http.HandleFunc("/shop", shoppingHandler)
-	http.HandleFunc("/add", artikelHandler)
-	http.HandleFunc("/delete", deleteHandler)
+	router.HandleFunc("/shop", shoppingHandler)
+	router.HandleFunc("/add", artikelHandler)
+	router.HandleFunc("/delete", deleteHandler)
 
-	http.ListenAndServe(":"+getPort(), nil)
-	//http.Handle("/", router)
-	//log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
-	appengine.Main()
+	http.Handle("/", router)
+	log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
+
 }
 
 func getPort() (port string) {
