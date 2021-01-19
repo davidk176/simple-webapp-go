@@ -43,8 +43,6 @@ const (
 	googleOAuthApiV4 = "https://www.googleapis.com/oauth2/v4/token"
 )
 
-
-
 /*
 Initialisert die OAuthConfig und die Session
 */
@@ -94,7 +92,6 @@ Dieser wird gegen den Token getauscht. Anschließend werden Userinformationen er
 func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//neue session anlegen
 	session, err := store.Get(r, "session-name")
-	writeDataInCache(w, r)
 	if err != nil {
 		log.Print(err)
 	}
