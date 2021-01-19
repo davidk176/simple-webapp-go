@@ -8,10 +8,10 @@ steps:
   #  name: "golangci/golangci-lint"
    # args: ["golangci-lint","run"]
 
-  - id: 'Test'
-    name: "gcr.io/cloud-builders/go"
-    args: ["test", "."]
-    env: ["GOPATH=/fakepath"]
+  #- id: 'Test'
+   # name: "gcr.io/cloud-builders/go"
+    #args: ["test", "."]
+    #env: ["GOPATH=/fakepath"]
     #cloud-builders/go verlangt GOPATH
 
   - id: 'Deploy App'
