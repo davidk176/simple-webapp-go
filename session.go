@@ -2,13 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"google.golang.org/appengine"
 	"google.golang.org/appengine/memcache"
 	"log"
 	"net/http"
 )
 
 func writeDataInCache(res http.ResponseWriter, req *http.Request) {
-	ctx := req.Context()
+	ctx := appengine.NewContext(req)
 	m := map[string]string{
 		"email": "test@example.com",
 	}
