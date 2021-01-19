@@ -4,12 +4,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
+	"google.golang.org/appengine"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+	appengine.Main()
 	router := mux.NewRouter()
 	router.HandleFunc("/", homeHandler)
 	router.HandleFunc("/login", loginHandler)
