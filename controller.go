@@ -69,7 +69,6 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie, _ := r.Cookie("idtoken")
-	log.Print("Token from Cookie: " + cookie.Value)
 	cv := utils.GetInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
 		return
