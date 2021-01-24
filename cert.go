@@ -44,11 +44,14 @@ type response struct {
 
 var (
 	certs *Certs
-
 	// Google Sign on certificates.
 	googleOAuth2CertsURL = "https://www.googleapis.com/oauth2/v3/certs"
+	allowedIssuers       = []string{"accounts.google.com", "https://accounts.google.com"}
 )
 
+/*
+holt öffentliches Zertifikat von GoogleOAuth2 Api
+*/
 func getGoogleCerts() (*Certs, error) {
 
 	log.Print("get Certs from Google")
@@ -96,6 +99,9 @@ func getGoogleCerts() (*Certs, error) {
 
 }
 
+/*
+Parst Token und decodiert Header
+*/
 func parseJWT(t string) (*jws.Header, error) {
 	s := strings.Split(t, ".")
 	dh, err := base64.RawURLEncoding.DecodeString(s[0])
@@ -110,6 +116,10 @@ func parseJWT(t string) (*jws.Header, error) {
 	return h, nil
 }
 
+/*
+Decodiert JWT (Aufteilung bei .)
+Holt Claims aus zweitem Teil
+*/
 func decodeJWT(t string) (*ClaimSet, error) {
 	s := strings.Split(t, ".")
 
@@ -122,6 +132,14 @@ func decodeJWT(t string) (*ClaimSet, error) {
 	return c, err
 }
 
+/*
+Prüft ob JWT gültig:
+- erlaubtes Format (Header und Claims)
+- Signatur mit zu public key gehörigem private key erstellt
+- Expiration nicht abgelaufen
+- von gültigem Issuer ausgestellt
+TODO: restliche Prüfungen implementiern
+*/
 func verifyJWT(t string) bool {
 	c, err := getGoogleCerts()
 	log.Print(c.Keys)
@@ -138,6 +156,16 @@ func verifyJWT(t string) bool {
 		return false
 	}
 	if time.Now().Unix() > cs.Exp+int64(time.Second*60) {
+		return false
+	}
+
+	found := false
+	for _, i := range allowedIssuers {
+		if cs.Iss == i {
+			found = true
+		}
+	}
+	if !found {
 		return false
 	}
 
