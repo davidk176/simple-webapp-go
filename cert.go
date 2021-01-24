@@ -52,8 +52,15 @@ var (
 func getGoogleCerts() (*Certs, error) {
 
 	log.Print("get Certs from Google")
+	if certs != nil {
+		if time.Now().Before(certs.Expiry) {
+			log.Print("return cached certs")
+			return certs, nil
+		}
+	}
 	cacheAge := int64(7200)
 
+	log.Print("Call Google Cert Endpoint")
 	res, _ := http.Get(googleOAuth2CertsURL)
 	resp := &response{}
 	json.NewDecoder(res.Body).Decode(&resp)
