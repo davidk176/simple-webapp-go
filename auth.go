@@ -176,12 +176,8 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 	session, err := store.Get(r, "session-name")
 	refresh_token := session.Values["refresh_token"]
 
-	if err != nil {
-		return false
-	}
-
 	//wenn kein refresh_token vorhanden, neuer Login notwendig
-	if refresh_token == nil {
+	if err != nil || refresh_token == nil {
 		log.Print("refresh_token is null --> login")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return false
