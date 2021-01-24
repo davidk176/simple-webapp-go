@@ -14,7 +14,6 @@ import (
 	"github.com/quasoft/memstore"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	tokenval "google.golang.org/api/oauth2/v2"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -49,6 +48,9 @@ Initialisert die OAuthConfig und die Session
 func init() {
 	ClientSecret, _ := utils.AccessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
 
+	s := "hi593_XKTINSKQuZQ741K1MK"
+	ClientSecret = &s
+
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
 		ClientID:     "345398956581-rq77v9k0l7uo0v7tvtgur21ld6ht3i8b.apps.googleusercontent.com",
@@ -69,7 +71,7 @@ func init() {
 	store.Options = &sessions.Options{
 		MaxAge:   60 * 15, //Session läuft nach 15 min ab
 		HttpOnly: true,    //sichert Cookie gegen Script-Zugriffe
-		Secure:   true,    //erlaubt nur https
+		//Secure:   true,    //erlaubt nur https
 	}
 
 }
@@ -92,11 +94,13 @@ Dieser wird gegen den Token getauscht. Anschließend werden Userinformationen er
 func handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 	//neue session anlegen
 	session, err := store.Get(r, "session-name")
+
 	if err != nil {
 		log.Print(err)
 	}
 	state, _ := r.Cookie("oauthstate")
-	log.Print(state)
+	log.Print("state from Cookie ", state)
+	log.Print("state from r ", r.FormValue("state"))
 
 	//vergleicht state aus cookie und state aus r zum Schutz vor XSRF
 	if r.FormValue("state") != state.Value {
@@ -159,6 +163,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	state := utils.GenerateStateCookie(w)
 	url := googleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 	log.Print("redirect to " + url)
+	log.Print("login state ", state)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
@@ -170,6 +175,10 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 	//open session
 	session, err := store.Get(r, "session-name")
 	refresh_token := session.Values["refresh_token"]
+
+	if err != nil {
+		return false
+	}
 
 	//wenn kein refresh_token vorhanden, neuer Login notwendig
 	if refresh_token == nil {
@@ -192,18 +201,8 @@ func verifyIdToken(t string, w http.ResponseWriter, r *http.Request) bool {
 		utils.GenerateTokenCookie(w, "idtoken", result["id_token"].(string), time.Now().Add(time.Duration(result["expires_in"].(float64))*time.Second))
 		return true
 	}
-	//validiert Token mittels Aufruf von OAuth2-API
-	oauth2Service, err := tokenval.New(httpClient)
-	tokenInfoCall := oauth2Service.Tokeninfo()
-	tokenInfoCall.IdToken(t)
-	tokenInfo, err := tokenInfoCall.Do()
-	log.Print(tokenInfo)
-	log.Print(err)
-	if err != nil {
-		log.Print("Token invalid!")
-		return false
-	}
-	return true
+	//validiert Token mit JWT-Mitteln
+	return verifyJWT(t)
 }
 
 /*
