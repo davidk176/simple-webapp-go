@@ -25,8 +25,10 @@ type Artikel struct {
 }
 
 func shoppingHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Print("Start shoppingHandler")
 	session, err := store.Get(r, "session-name")
+	log.Print("Session", session)
 
 	if err != nil {
 		log.Print(err)
@@ -47,7 +49,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
 	}
-	//pv.Artikel = getArtikelFromDatabase()
+	pv.Artikel = getArtikelFromDatabase()
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
@@ -67,7 +69,6 @@ func artikelHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie, _ := r.Cookie("idtoken")
-	log.Print("Token from Cookie: " + cookie.Value)
 	cv := utils.GetInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
 		return
@@ -115,6 +116,12 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
 	session, err := store.Get(r, "session-name")
+
+	cookie, _ := r.Cookie("idtoken")
+	cv := utils.GetInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
+		return
+	}
 
 	if err != nil {
 		log.Print(err)

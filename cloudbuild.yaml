@@ -1,10 +1,21 @@
 steps:
-  - id: 'pull dependencies'
+  - id: 'Pull dependencies'
     name: 'golang'
     args: [ 'go', 'build', '.' ]
     env: [ 'GO111MODULE=on' ]
 
-  - id: 'deploy app'
+  #- id: 'Go Linter'
+  #  name: "golangci/golangci-lint"
+   # args: ["golangci-lint","run"]
+
+  #- id: 'Test'
+   # name: "gcr.io/cloud-builders/go"
+    #args: ["test", "."]
+    #env: ["GOPATH=/fakepath"]
+    #cloud-builders/go verlangt GOPATH
+
+  - id: 'Deploy App'
     name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
+
 timeout: "1600s"

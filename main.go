@@ -9,7 +9,12 @@ import (
 	"os"
 )
 
+func init() {
+
+}
+
 func main() {
+
 	router := mux.NewRouter()
 	router.HandleFunc("/", homeHandler)
 	router.HandleFunc("/login", loginHandler)
@@ -21,6 +26,7 @@ func main() {
 
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
+
 }
 
 func getPort() (port string) {
