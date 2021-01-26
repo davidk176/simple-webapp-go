@@ -117,12 +117,6 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Start deleteHandler")
 	session, err := store.Get(r, "session-name")
 
-	cookie, _ := r.Cookie("idtoken")
-	cv := utils.GetInfoFromCookie(cookie)
-	if !verifyIdToken(cv, w, r) {
-		return
-	}
-
 	if err != nil {
 		log.Print(err)
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
