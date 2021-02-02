@@ -46,14 +46,11 @@ const (
 Initialisert die OAuthConfig und die Session
 */
 func init() {
-	ClientSecret, _ := utils.AccessSecretVersion("projects/test1-cc/secrets/CLIENT_SECRET/versions/latest")
-
-	s := "hi593_XKTINSKQuZQ741K1MK"
-	ClientSecret = &s
+	ClientSecret, _ := utils.AccessSecretVersion("projects/webapp-shop-303617/secrets/CLIENT_SECRET/versions/latest")
 
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
-		ClientID:     "345398956581-rq77v9k0l7uo0v7tvtgur21ld6ht3i8b.apps.googleusercontent.com",
+		ClientID:     "774798586297-v06kgrjv24qs64h87upihq2v4trdr9a8.apps.googleusercontent.com",
 		ClientSecret: *ClientSecret,
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile"},
 		Endpoint:     google.Endpoint,
