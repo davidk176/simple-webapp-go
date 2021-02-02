@@ -72,7 +72,7 @@ func initSocketConnectionPool() (*sql.DB, error) {
 	// [START cloud_sql_mysql_databasesql_create_socket]
 	var (
 		dbUser                 = os.Getenv("DB_USER")
-		dbPwd, err             = utils.AccessSecretVersion("projects/test1-cc/secrets/DB_SQL_PW/versions/latest")
+		dbPwd, err             = utils.AccessSecretVersion("projects/webapp-shop-303617/secrets/DB_SQL_PW/versions/latest")
 		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME")
 		dbName                 = os.Getenv("DB_NAME")
 	)
