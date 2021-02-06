@@ -70,8 +70,11 @@ func deleteArtikelFromDatabase(id string) (artikel Artikel) {
 	rows.Scan(&a.Name, &a.Anz, &a.Id)
 
 	//TEST
+	fmt.Println("TestDelete")
 	ctx := context.Background()
 	createClient(ctx)
+
+	fmt.Println(createClient(ctx))
 
 	return artikel
 }
@@ -84,6 +87,8 @@ func createClient(ctx context.Context) *firestore.Client {
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
+
+	fmt.Println(client)
 
 	_, _, err2 := client.Collection("users").Add(ctx, map[string]interface{}{
 		"first": "Ada",
