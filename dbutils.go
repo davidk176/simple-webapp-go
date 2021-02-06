@@ -15,6 +15,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"context"
+
+	firebase "firebase.google.com/go"
 )
 
 func addArtikelToDatabase(artikel Artikel) {
@@ -70,11 +72,11 @@ func deleteArtikelFromDatabase(id string) (artikel Artikel) {
 	rows.Scan(&a.Name, &a.Anz, &a.Id)
 
 	//TEST
-	fmt.Println("TestDelete")
+	fmt.Println("TestFirestoreBegin")
 	ctx := context.Background()
 	createClient(ctx)
 
-	fmt.Println(createClient(ctx))
+	fmt.Println("TestFinishFirestore")
 
 	return artikel
 }
@@ -83,11 +85,19 @@ func createClient(ctx context.Context) *firestore.Client {
 	// Sets your Google Cloud Platform project ID.
 	projectID := "webapp-shop-303617"
 
-	client, err := firestore.NewClient(ctx, projectID)
+	conf := &firebase.Config{ProjectID: projectID}
+	app, err := firebase.NewApp(ctx, conf)
+	//client, err := firestore.NewClient(ctx, conf)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
+	client, err3 := app.Firestore(ctx)
+	if err3 != nil {
+		log.Fatalln(err3)
+	}
+
+	fmt.Println("TestPrintClient:")
 	fmt.Println(client)
 
 	_, _, err2 := client.Collection("users").Add(ctx, map[string]interface{}{
