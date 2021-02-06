@@ -48,8 +48,6 @@ Initialisert die OAuthConfig und die Session
 */
 func init() {
 	ClientSecret, _ := utils.AccessSecretVersion("projects/webapp-shop-303617/secrets/CLIENT_SECRET/versions/latest")
-	s := "hi593_XKTINSKQuZQ741K1MK"
-	ClientSecret = &s
 
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  getRedirectUrl(),
