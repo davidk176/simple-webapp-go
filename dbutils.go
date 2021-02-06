@@ -78,7 +78,7 @@ func deleteArtikelFromDatabase(id string) (artikel Artikel) {
 
 func createClient(ctx context.Context) *firestore.Client {
 	// Sets your Google Cloud Platform project ID.
-	projectID := "webapp-shop"
+	projectID := "webapp-shop-303617"
 
 	client, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
