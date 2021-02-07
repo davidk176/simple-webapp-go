@@ -1,12 +1,14 @@
 package main
 
 import (
-	"github.com/davidk176/simple-webapp-go/utils"
-	_ "golang.org/x/oauth2/google"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
+
+	"github.com/davidk176/simple-webapp-go/utils"
+	_ "golang.org/x/oauth2/google"
 )
 
 type PageVar struct {
@@ -15,6 +17,7 @@ type PageVar struct {
 	Name     string
 	Picture  string
 	Username string
+	Input    string
 	Artikel  []Artikel
 }
 
@@ -158,3 +161,62 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err = t.Execute(w, nil)
 }*/
+
+func addCalculatorHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Start addCalculatorHandler")
+	log.Print("------------------HIER-----------------------------------------------------------")
+	session, err := store.Get(r, "session-name")
+
+	if err != nil {
+		log.Print(err)
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+		return
+	}
+	cookie, _ := r.Cookie("idtoken")
+	cv := utils.GetInfoFromCookie(cookie)
+	if !verifyIdToken(cv, w, r) {
+		return
+	}
+
+	pv := PageVar{
+		Title:    "MyShop",
+		Picture:  session.Values["picture"].(string),
+		Username: session.Values["username"].(string),
+	}
+
+	e := r.ParseForm()
+	if e != nil {
+		log.Print(e)
+	}
+	log.Print(r)
+
+	calculatorButton := r.Form.Get("calculatorButton")
+	log.Print("calculatorButton1: " + calculatorButton)
+
+	calculatorInput := r.Form.Get("calculatorInput")
+
+	if calculatorButton == "=" {
+		s := strings.Split(calculatorInput, "+")
+		log.Print(s)
+		s0, err := strconv.Atoi(s[0])
+		if err == nil {
+			log.Print(err)
+		}
+		s1, err := strconv.Atoi(s[1])
+		if err == nil {
+			log.Print(err)
+		}
+
+		calc := 0
+		calc = s0 + s1
+		calculatorInput = strconv.Itoa(calc)
+		calculatorButton = ""
+	}
+	pv.Input = calculatorInput + calculatorButton
+
+	t, err := template.ParseFiles("templates/shop1.html")
+	if err != nil {
+		log.Print("Error parsing template: ", err)
+	}
+	err = t.Execute(w, pv)
+}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,158 +9,195 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- include popper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
     <!-- Include Bootstrap-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-            crossorigin="anonymous"></script>
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <title>{{.Title}}</title>
 </head>
 
 
 <body>
-<!-- Fixed Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">{{.Title}}</a>
-        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
-                </li>
-            </ul>
-        </div>
-        <div class="collapse navbar-collapse" id="navbarNavPicture">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">
-                        <img src={{.Picture}} alt="user" style="width:30px;height:30px;" title={{.Username}}>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- Content -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="card col-md-10 w-100 p-3" style="margin-top: 15px">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
+    <!-- Fixed Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">{{.Title}}</a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#sql_">SQL-Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#nosql_">No-SQL-Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#calc_">Calculator</a>
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                 </ul>
             </div>
-            <!-- Content of Tabs -->
-            <div class="tab-content card-body">
-                <!-- SQL Tab -->
-                <div id="sql_" class="list-group tab-pane active">
-                    <h2>SQL-Shop</h2>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <!-- Stack Cards for design purposes -->
-                            <div class="card" style="width: 100%">
-                                <div class="card-header">
-                                    <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu Shop hinzufügen</h3>
-                                </div>
-                                <div class="card-body">
-                                    <form action="/add" id="shoppingcart" method="post">
-                                        <div class="form-group">
-                                            <label for="name">Artikel</label>
-                                            <input type="text" name="name" id="name" maxlength="30" required="required" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="menge">Menge</label>
-                                            <input type="number" name="menge" id="menge" required="required" class="form-control">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">absenden</button>
-                                        <button type="reset" class="btn btn-secondary">zurücksetzen</button>
-                                    </form>
+            <div class="collapse navbar-collapse" id="navbarNavPicture">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">
+                            <img src={{.Picture}} alt="user" style="width:30px;height:30px;" title={{.Username}}>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="card col-md-10 w-100 p-3" style="margin-top: 15px">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#sql_">SQL-Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#nosql_">No-SQL-Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#calc_">Calculator</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Content of Tabs -->
+                <div class="tab-content card-body">
+                    <!-- SQL Tab -->
+                    <div id="sql_" class="list-group tab-pane active">
+                        <h2>SQL-Shop</h2>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <!-- Stack Cards for design purposes -->
+                                <div class="card" style="width: 100%">
+                                    <div class="card-header">
+                                        <h3 class="h3 mb-3 font-weight-normal" style="text-align: center"> Artikel zu
+                                            Shop hinzufügen</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="/add" id="shoppingcart" method="post">
+                                            <div class="form-group">
+                                                <label for="name">Artikel</label>
+                                                <input type="text" name="name" id="name" maxlength="30"
+                                                    required="required" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="menge">Menge</label>
+                                                <input type="number" name="menge" id="menge" required="required"
+                                                    class="form-control">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">absenden</button>
+                                            <button type="reset" class="btn btn-secondary">zurücksetzen</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                   </div>
 
-                    <!-- Response Alert -->
-                    {{with $1:=.Response}}
-                    <div class="alert alert-success" role="alert" style="margin-top: 30px">
-                        {{$1}} zu Artikeln hinzugefügt
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {{end}}
+                        <!-- Response Alert -->
+                        {{with $1:=.Response}}
+                        <div class="alert alert-success" role="alert" style="margin-top: 30px">
+                            {{$1}} zu Artikeln hinzugefügt
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {{end}}
 
-                    <!-- SQL-Table -->
-                    <div class="row" style="margin-top: 20px">
-                        <div class="card" style="width: 100%; margin-left: 15px">
-                        {{with $2:=.Artikel}}
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Menge</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {{range $2}}
-                                <tr>
-                                    <td>{{.Name}}</td>
-                                    <td>{{.Anz}}</td>
-                                    <td>
-                                        <form action="/delete" id="deleteitem" method="delete">
-                                            <button name="deleteid" class="btn btn-outline-danger" value={{.Id}}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                     class="bi bi-trash"
-                                                     viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                                    <path fill-rule="evenodd"
-                                                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                                </svg>
-                                                Löschen
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
+                        <!-- SQL-Table -->
+                        <div class="row" style="margin-top: 20px">
+                            <div class="card" style="width: 100%; margin-left: 15px">
+                                {{with $2:=.Artikel}}
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Menge</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range $2}}
+                                        <tr>
+                                            <td>{{.Name}}</td>
+                                            <td>{{.Anz}}</td>
+                                            <td>
+                                                <form action="/delete" id="deleteitem" method="delete">
+                                                    <button name="deleteid" class="btn btn-outline-danger"
+                                                        value={{.Id}}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                            <path fill-rule="evenodd"
+                                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                        </svg>
+                                                        Löschen
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
                                 {{end}}
-                                </tbody>
-                            </table>
-                            {{end}}
+                            </div>
                         </div>
                     </div>
+                    <!-- No SQL Tab -->
+                    <div id="nosql_" class="list-group tab-pane">
+                        <h2>No-SQL-Shop</h2>
+                    </div>
+                    <!-- Calculator Tab -->
+                    <div id="calc_" class="list-group tab-pane">
+                        <h2>Calculator</h2>
+                        <form action="/addCalculator" id="addCalculatorInput" method="post" >
+                            <div class="form-group">
+                                <input type="text" name="calculatorInput" id="calculatorInput" value="{{.Input}}" />
+                            </div>
+                            <button type="submit" name="calculatorButton" id="calculatorButton" value="1" class="btn btn-primary">1</button>
+                            <button type="submit" name="calculatorButton" id="calculatorButton" value="2" class="btn btn-primary">2</button>
+                            <button type="submit" name="calculatorButton" id="calculatorButton" value="+" class="btn btn-primary">+</button>
+                            <button type="submit" name="calculatorButton" id="calculatorButton" value="=" class="btn btn-primary">=</button>
+                        </form>
+
+                       
+                        <!-- 
+                        <div class="calculator card">
+
+                            <div class="calculator-keys">
+                                <button type="button" class="operator btn btn-info" value="+">+</button>
+                                <button type="button" class="operator btn btn-info" value="-">-</button>
+                                <button type="button" class="operator btn btn-info" value="*">&times;</button>
+                                <button type="button" class="operator btn btn-info" value="/">&divide;</button>
+                                <button type="button" value="7" class="btn btn-light waves-effect">7</button>
+                                <button type="button" value="8" class="btn btn-light waves-effect">8</button>
+                                <button type="button" value="9" class="btn btn-light waves-effect">9</button>
+                                <button type="button" value="4" class="btn btn-light waves-effect">4</button>
+                                <button type="button" value="5" class="btn btn-light waves-effect">5</button>
+                                <button type="button" value="6" class="btn btn-light waves-effect">6</button>
+                                <button type="button" value="1" class="btn btn-light waves-effect">1</button>
+                                <button type="button" value="2" class="btn btn-light waves-effect">2</button>
+                                <button type="button" value="3" class="btn btn-light waves-effect">3</button>
+
+                                <button type="button" value="0" class="btn btn-light waves-effect">0</button>
+                                <button type="button" class="decimal function btn btn-secondary" value=".">.</button>
+                                <button type="button" class="all-clear function btn btn-danger btn-sm"
+                                    value="all-clear">AC</button>
+                                <button type="button" class="equal-sign operator btn btn-default" value="=">=</button>
+                            </div>
+                        </div> -->
+                    </div>
                 </div>
-                <!-- No SQL Tab -->
-                <div id="nosql_" class="list-group tab-pane">
-                    <h2>No-SQL-Shop</h2>
-                </div>
-                <!-- Calculator Tab -->
-                <div id="calc_" class="list-group tab-pane" >
-                    <h2>Calculator</h2>
-                </div>
+                <div class="col-md-1"></div>
             </div>
         </div>
-        <div class="col-md-1"></div>
-    </div>
-</div>
 </body>
+
 </html>
-
-

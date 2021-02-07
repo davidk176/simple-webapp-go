@@ -1,12 +1,13 @@
 package main
 
 import (
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/context"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 )
 
 func init() {
@@ -23,6 +24,8 @@ func main() {
 	router.HandleFunc("/shop", shoppingHandler)
 	router.HandleFunc("/add", artikelHandler)
 	router.HandleFunc("/delete", deleteHandler)
+
+	router.HandleFunc("/addCalculator", addCalculatorHandler)
 
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
