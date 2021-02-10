@@ -55,15 +55,15 @@
             <div class="col-md-1"></div>
             <div class="card col-md-10 w-100 p-3" style="margin-top: 15px">
                 <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#sql_">SQL-Shop</a>
+                            <a class="nav-link active" data-toggle="tab" href="#sql_" aria-controls="sql_" aria-selected="true">SQL-Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#nosql_">NoSQL-Shop</a>
+                            <a class="nav-link" data-toggle="tab" href="#nosql_" aria-controls="nosql_" aria-selected="false">NoSQL-Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#calc_">Calculator</a>
+                            <a class="nav-link" data-toggle="tab" href="#calc_" aria-controls="calc_" aria-selected="false">Calculator</a>
                         </li>
                     </ul>
                 </div>
@@ -294,6 +294,23 @@
                 <div class="col-md-1"></div>
             </div>
         </div>
+    
+    <script>$('#myTab a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+});
+
+// store the currently selected tab in the hash value
+$("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+    var id = $(e.target).attr("href").substr(1);
+    window.location.hash = id;
+});
+
+// on load of the page: switch to the currently selected tab
+var hash = window.location.hash;
+$('#myTab a[href="' + hash + '"]').tab('show');
+</script>
+</body>
 </body>
 
 </html>
