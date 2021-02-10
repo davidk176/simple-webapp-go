@@ -25,7 +25,7 @@ func main() {
 	router.HandleFunc("/add", artikelHandler)
 	router.HandleFunc("/delete", deleteHandler)
 
-	router.HandleFunc("/addCalculator", addCalculatorHandler)
+	router.HandleFunc("/addCalculator", calculatorHandler)
 
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
