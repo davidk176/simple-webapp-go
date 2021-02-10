@@ -60,7 +60,7 @@
                             <a class="nav-link active" data-toggle="tab" href="#sql_">SQL-Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#nosql_">No-SQL-Shop</a>
+                            <a class="nav-link" data-toggle="tab" href="#nosql_">NoSQL-Shop</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#calc_">Calculator</a>
@@ -152,7 +152,7 @@
                     </div>
                     <!-- No SQL Tab -->
                     <div id="nosql_" class="list-group tab-pane">
-                        <h2>No-SQL-Shop</h2>
+                        <h2>NoSQL-Shop</h2>
                         <div class="container-fluid">
                             <div class="row">
                                 <!-- Stack Cards for design purposes -->
@@ -236,47 +236,59 @@
                         <h2>Calculator</h2>
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="card" style="width: 100%">
+                                <div class="card" style="width: 465px; height:330px">
                                     <div class="card-body">
                                         <form action="/addCalculator" id="addCalculatorInput" method="POST">
                                             <div class="form-group">
-                                                <input type="text" name="calculatorInput" value="{{.Input}}" class="form-control">
+                                                <input style="width: 415px;" type="text" name="calculatorInput" value="{{.Input}}"
+                                                    class="form-control">
                                             </div>
-                                            <button name="calculatorButton" value="1"
-                                                class="btn btn-primary">1</button>
-                                            <button name="calculatorButton" value="2" class="btn btn-primary">2</button>
-                                            <button name="calculatorButton" value="+" class="btn btn-secondary">+</button>
-                                            <button name="calculatorButton" value="=" class="btn btn-secondary">=</button>
+                                            <div class="form-group">
+                                                <button style="width: 100px;" name="calculatorButton" value="7"
+                                                    class="btn btn-primary btn-lg">7</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="8"
+                                                    class="btn btn-primary btn-lg">8</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="9"
+                                                    class="btn btn-primary btn-lg">9</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="x"
+                                                    class="btn btn-secondary btn-lg">x</button>
+                                            </div>
+                                            <div class="form-group">
+                                                <button style="width: 100px;" name="calculatorButton" value="4"
+                                                    class="btn btn-primary btn-lg">4</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="5"
+                                                    class="btn btn-primary btn-lg">5</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="6"
+                                                    class="btn btn-primary btn-lg">6</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="-"
+                                                    class="btn btn-secondary btn-lg">-</button>
+                                            </div>
+                                            <div class="form-group">
+                                                <button style="width: 100px;" name="calculatorButton" value="1"
+                                                    class="btn btn-primary btn-lg">1</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="2"
+                                                    class="btn btn-primary btn-lg">2</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="3"
+                                                    class="btn btn-primary btn-lg">3</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="+"
+                                                    class="btn btn-secondary btn-lg">+</button>
+                                            </div>
+                                            <div class="form-group">
+                                                <button style="width: 100px;" name="calculatorButton" value="b"
+                                                    class="btn btn-secondary btn-lg">AC</span>
+                                                    </button>
+                                                <button style="width: 100px;" name="calculatorButton" value="0"
+                                                    class="btn btn-primary btn-lg">0</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="/"
+                                                    class="btn btn-secondary btn-lg">/</button>
+                                                <button style="width: 100px;" name="calculatorButton" value="="
+                                                    class="btn btn-secondary btn-lg">=</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- 
-                        <div class="calculator card">
-
-                            <div class="calculator-keys">
-                                <button type="button" class="operator btn btn-info" value="+">+</button>
-                                <button type="button" class="operator btn btn-info" value="-">-</button>
-                                <button type="button" class="operator btn btn-info" value="*">&times;</button>
-                                <button type="button" class="operator btn btn-info" value="/">&divide;</button>
-                                <button type="button" value="7" class="btn btn-light waves-effect">7</button>
-                                <button type="button" value="8" class="btn btn-light waves-effect">8</button>
-                                <button type="button" value="9" class="btn btn-light waves-effect">9</button>
-                                <button type="button" value="4" class="btn btn-light waves-effect">4</button>
-                                <button type="button" value="5" class="btn btn-light waves-effect">5</button>
-                                <button type="button" value="6" class="btn btn-light waves-effect">6</button>
-                                <button type="button" value="1" class="btn btn-light waves-effect">1</button>
-                                <button type="button" value="2" class="btn btn-light waves-effect">2</button>
-                                <button type="button" value="3" class="btn btn-light waves-effect">3</button>
-
-                                <button type="button" value="0" class="btn btn-light waves-effect">0</button>
-                                <button type="button" class="decimal function btn btn-secondary" value=".">.</button>
-                                <button type="button" class="all-clear function btn btn-danger btn-sm"
-                                    value="all-clear">AC</button>
-                                <button type="button" class="equal-sign operator btn btn-default" value="=">=</button>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="col-md-1"></div>

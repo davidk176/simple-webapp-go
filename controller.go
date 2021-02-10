@@ -162,9 +162,8 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, nil)
 }*/
 
-func addCalculatorHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("Start addCalculatorHandler")
-	log.Print("------------------HIER-----------------------------------------------------------")
+func calculatorHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Start calculatorHandler")
 	session, err := store.Get(r, "session-name")
 
 	if err != nil {
@@ -172,6 +171,7 @@ func addCalculatorHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 		return
 	}
+
 	cookie, _ := r.Cookie("idtoken")
 	cv := utils.GetInfoFromCookie(cookie)
 	if !verifyIdToken(cv, w, r) {
@@ -194,29 +194,74 @@ func addCalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("calculatorButton1: " + calculatorButton)
 
 	calculatorInput := r.Form.Get("calculatorInput")
+	var calc int
 
 	if calculatorButton == "=" {
-		s := strings.Split(calculatorInput, "+")
-		log.Print(s)
-		s0, err := strconv.Atoi(s[0])
-		if err == nil {
-			log.Print(err)
-		}
-		s1, err := strconv.Atoi(s[1])
-		if err == nil {
-			log.Print(err)
+		calc = 0
+		if strings.Contains(calculatorInput, "+") {
+			s := strings.Split(calculatorInput, "+")
+			s0, err := strconv.Atoi(s[0])
+			if err == nil {
+				log.Print(err)
+			}
+			s1, err := strconv.Atoi(s[1])
+			if err == nil {
+				log.Print(err)
+			}
+			calc = s0 + s1
+		} else if strings.Contains(calculatorInput, "-") {
+			s := strings.Split(calculatorInput, "-")
+			log.Print("SPLIT: ")
+			log.Print(s)
+			s0, err := strconv.Atoi(s[0])
+			if err == nil {
+				log.Print(err)
+			}
+			s1, err := strconv.Atoi(s[1])
+			if err == nil {
+				log.Print(err)
+			}
+			calc = s0 - s1
+		} else if strings.Contains(calculatorInput, "/") {
+			s := strings.Split(calculatorInput, "/")
+			s0, err := strconv.Atoi(s[0])
+			if err == nil {
+				log.Print(err)
+			}
+			s1, err := strconv.Atoi(s[1])
+			if err == nil {
+				log.Print(err)
+			}
+			calc = s0 / s1
+		} else if strings.Contains(calculatorInput, "x") {
+			s := strings.Split(calculatorInput, "x")
+			s0, err := strconv.Atoi(s[0])
+			if err == nil {
+				log.Print(err)
+			}
+			s1, err := strconv.Atoi(s[1])
+			if err == nil {
+				log.Print(err)
+			}
+			calc = s0 * s1
 		}
 
-		calc := 0
-		calc = s0 + s1
 		calculatorInput = strconv.Itoa(calc)
 		calculatorButton = ""
 	}
-	pv.Input = calculatorInput + calculatorButton
+
+	if calculatorButton == "b" {
+		calculatorButton = ""
+		pv.Input = ""
+	} else {
+		pv.Input = calculatorInput + calculatorButton
+	}
 
 	t, err := template.ParseFiles("templates/shop1.html")
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}
+
 	err = t.Execute(w, pv)
+	log.Print(err)
 }
