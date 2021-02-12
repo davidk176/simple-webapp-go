@@ -288,20 +288,15 @@
     </div>
 </div>
     
-    <script>$('#myTab a').click(function(e) {
-    e.preventDefault();
-    $(this).tab('show');
-});
-
-// store the currently selected tab in the hash value
-$("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
-    var id = $(e.target).attr("href").substr(1);
-    window.location.hash = id;
-});
-
-// on load of the page: switch to the currently selected tab
-var hash = window.location.hash;
-$('#myTab a[href="' + hash + '"]').tab('show');</script>
+    <script>$(document).ready(function(){
+        $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+        }
+    });</script>
 </body>
 </html>
 
