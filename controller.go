@@ -267,4 +267,5 @@ func calculatorHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = t.Execute(w, pv)
 	log.Print(err)
-}
+
+	HIER FEHLT EINE KLAMMER!!!
