@@ -52,7 +52,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
 	}
-	pv.Artikel = getArtikelFromDatabase()
+	//pv.Artikel = getArtikelFromDatabase()
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
@@ -211,8 +211,6 @@ func calculatorHandler(w http.ResponseWriter, r *http.Request) {
 			calc = s0 + s1
 		} else if strings.Contains(calculatorInput, "-") {
 			s := strings.Split(calculatorInput, "-")
-			log.Print("SPLIT: ")
-			log.Print(s)
 			s0, err := strconv.Atoi(s[0])
 			if err == nil {
 				log.Print(err)
@@ -246,7 +244,12 @@ func calculatorHandler(w http.ResponseWriter, r *http.Request) {
 			calc = s0 * s1
 		}
 
-		calculatorInput = strconv.Itoa(calc)
+		if calc == 0 {
+			calculatorInput = ""
+		} else {
+			calculatorInput = strconv.Itoa(calc)
+		}
+
 		calculatorButton = ""
 	}
 
