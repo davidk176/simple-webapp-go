@@ -256,6 +256,7 @@ func calculatorHandler(w http.ResponseWriter, r *http.Request) {
 		log.Print("Error parsing template: ", err)
 	}
 
+	pv.Artikel = getArtikelFromDatabase()
 	err = t.Execute(w, pv)
 	log.Print(err)
 }
