@@ -52,7 +52,7 @@ func shoppingHandler(w http.ResponseWriter, r *http.Request) {
 		Picture:  session.Values["picture"].(string),
 		Username: session.Values["username"].(string),
 	}
-	//pv.Artikel = getArtikelFromDatabase()
+	pv.Artikel = getArtikelFromDatabase()
 	t, err := template.ParseFiles("templates/shop1.html")
 
 	if err != nil {
@@ -268,4 +268,4 @@ func calculatorHandler(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, pv)
 	log.Print(err)
 
-	HIER FEHLT EINE KLAMMER!!!
+}
