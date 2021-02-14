@@ -24,6 +24,7 @@ func main() {
 	router.HandleFunc("/shop", shoppingHandler)
 	router.HandleFunc("/add", artikelHandler)
 	router.HandleFunc("/delete", deleteHandler)
+	router.HandleFunc("/addCalculator", calculatorHandler)
 
 	router.HandleFunc("/addCalculator", calculatorHandler)
 
