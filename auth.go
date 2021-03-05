@@ -8,12 +8,6 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/davidk176/simple-webapp-go/utils"
-	"github.com/gorilla/securecookie"
-	"github.com/gorilla/sessions"
-	"github.com/quasoft/memstore"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -22,6 +16,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/davidk176/simple-webapp-go/utils"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
+	"github.com/quasoft/memstore"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 type Token struct {

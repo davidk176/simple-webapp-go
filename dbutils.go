@@ -7,10 +7,16 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/davidk176/simple-webapp-go/utils"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
+
+	"cloud.google.com/go/firestore"
+	"github.com/davidk176/simple-webapp-go/utils"
+	_ "github.com/go-sql-driver/mysql"
+
+	"context"
+
+	firebase "firebase.google.com/go"
 )
 
 func addArtikelToDatabase(artikel Artikel) {
@@ -65,7 +71,47 @@ func deleteArtikelFromDatabase(id string) (artikel Artikel) {
 	a := Artikel{}
 	rows.Scan(&a.Name, &a.Anz, &a.Id)
 
+	//TEST
+	fmt.Println("TestFirestoreBegin")
+	ctx := context.Background()
+	createClient(ctx)
+
+	fmt.Println("TestFinishFirestore")
+
 	return artikel
+}
+
+func createClient(ctx context.Context) *firestore.Client {
+	// Sets your Google Cloud Platform project ID.
+	projectID := "webapp-shop-303617"
+
+	conf := &firebase.Config{ProjectID: projectID}
+	app, err := firebase.NewApp(ctx, conf)
+	//client, err := firestore.NewClient(ctx, conf)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
+
+	client, err3 := app.Firestore(ctx)
+	if err3 != nil {
+		log.Fatalln(err3)
+	}
+
+	fmt.Println("TestPrintClient:")
+	fmt.Println(client)
+
+	_, _, err2 := client.Collection("users").Add(ctx, map[string]interface{}{
+		"first": "Ada",
+		"last":  "Lovelace",
+		"born":  1815,
+	})
+	if err2 != nil {
+		log.Fatalf("Failed adding alovelace: %v", err2)
+	}
+
+	// Close client when done with
+	defer client.Close()
+	return client
 }
 
 func initSocketConnectionPool() (*sql.DB, error) {

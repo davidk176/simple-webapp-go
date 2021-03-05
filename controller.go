@@ -263,7 +263,6 @@ func calculatorHandler(w http.ResponseWriter, r *http.Request) {
 
 /*func errorHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/default_error.html")
-
 	if err != nil {
 		log.Print("Error parsing template: ", err)
 	}

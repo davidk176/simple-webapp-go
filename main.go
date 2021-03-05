@@ -26,6 +26,8 @@ func main() {
 	router.HandleFunc("/delete", deleteHandler)
 	router.HandleFunc("/addCalculator", calculatorHandler)
 
+	router.HandleFunc("/addCalculator", calculatorHandler)
+
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":"+getPort(), context.ClearHandler(router)))
 
